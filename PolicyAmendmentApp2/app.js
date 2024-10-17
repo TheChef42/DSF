@@ -8,6 +8,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require('express-fileupload')());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Import routes
 const mainRoute = require('./routes/main');
@@ -18,6 +19,7 @@ const sendAmendmentsRoute = require('./routes/sendAmendments');
 const exportExcelRoute = require('./routes/exportExcel');
 const confirmationRoute = require('./routes/confirmation');
 const userRoute = require('./routes/user'); // User routes
+const amendmentRoute = require('./routes/amendment');
 
 // Middleware for session handling
 app.use(session({
@@ -36,11 +38,16 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
+
 // User routes for registration and login, no authentication required
+app.use('/', mainRoute);
 app.use('/user', userRoute);
 
 // Protected routes that require authentication
-app.use('/', isAuthenticated, mainRoute);
+app.use('/amendment', isAuthenticated, mainRoute);
 app.use('/submit-amendment', isAuthenticated, submitRoute);
 app.use('/upload', isAuthenticated, uploadRoute);
 app.use('/export', isAuthenticated, downloadRoute);

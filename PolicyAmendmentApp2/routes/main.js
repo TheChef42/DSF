@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const storedAmendments = [];
 
-// Home route to render the form
+// Route for the landing page
 router.get('/', (req, res) => {
-    res.render('amendments', { amendments: storedAmendments });
+    res.render('landing');
 });
 
 module.exports = router;
-global.storedAmendments = storedAmendments; // Make accessible to other routes
