@@ -4,7 +4,7 @@ const db = require('../db'); // Your database connection
 
 // Helper function to replace null with empty string
 function replaceNull(value) {
-    return value === null ? '' : value;
+    return value == null ? '' : value; // Use == to catch both null and undefined
 }
 
 // Route to handle saving amendments to the database
@@ -17,21 +17,19 @@ router.post('/', async (req, res) => {
                 continue; // Skip this amendment if user_id is not defined
             }
 
-            console.log(amendment)
-
             await db.query(
                 'INSERT INTO amendments (user_id, amendment_number, amendment_reference, conflicting_with, line_from, line_to, amendment_type, original_text, new_text, motivation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     req.session.userId,
-                    replaceNull(amendment.amendment_number),
-                    replaceNull(amendment.amendment_reference),
-                    replaceNull(amendment.conflicting_with),
-                    replaceNull(amendment.line_from),
-                    replaceNull(amendment.line_to),
-                    replaceNull(amendment.amendment_type),
-                    replaceNull(amendment.original_text),
-                    replaceNull(amendment.new_text),
-                    replaceNull(amendment.motivation)
+                    replaceNull(amendment.æfNummer),       // Map æfNummer to amendment_number
+                    replaceNull(amendment.æfTilÆfNummer),  // Map æfTilÆfNummer to amendment_reference
+                    replaceNull(amendment.modstridendeMed),
+                    replaceNull(amendment.linjeFra),
+                    replaceNull(amendment.linjeTil),
+                    replaceNull(amendment.typeAfÆf),
+                    replaceNull(amendment.oprindeligTekst),
+                    replaceNull(amendment.nyTekst),
+                    replaceNull(amendment.motivationForÆf)
                 ]
             );
         }
