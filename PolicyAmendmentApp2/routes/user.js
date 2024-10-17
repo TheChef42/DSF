@@ -73,7 +73,9 @@ router.post('/login', async (req, res) => {
             // Check password
             if (await bcrypt.compare(password, user.password)) {
                 console.log("Password correct, logging in.");
+                // Store user ID and username in session
                 req.session.user = user.username;
+                req.session.userId = user.id; // Store the user ID for later use
                 res.redirect('/amendment');
             } else {
                 console.log("Incorrect password.");

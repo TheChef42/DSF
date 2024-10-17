@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
     try {
         // Loop through each amendment in the global array
         for (const amendment of global.storedAmendments) {
-            if (!amendment.user_id) {
+            if (!req.session.userId) {
                 console.error('User ID is missing for amendment:', amendment);
                 continue; // Skip this amendment if user_id is not defined
             }
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
             await db.query(
                 'INSERT INTO amendments (user_id, amendment_number, amendment_reference, conflicting_with, line_from, line_to, amendment_type, original_text, new_text, motivation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
-                    amendment.user_id,
+                    req.session.userId,
                     amendment.amendment_number,
                     amendment.amendment_reference,
                     amendment.conflicting_with,
