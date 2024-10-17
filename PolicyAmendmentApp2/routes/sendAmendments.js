@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); // Your database connection
 
+// Helper function to replace null with empty string
+function replaceNull(value) {
+    return value === null ? '' : value;
+}
+
 // Route to handle saving amendments to the database
 router.post('/', async (req, res) => {
     try {
@@ -16,15 +21,15 @@ router.post('/', async (req, res) => {
                 'INSERT INTO amendments (user_id, amendment_number, amendment_reference, conflicting_with, line_from, line_to, amendment_type, original_text, new_text, motivation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     req.session.userId,
-                    amendment.amendment_number,
-                    amendment.amendment_reference,
-                    amendment.conflicting_with,
-                    amendment.line_from,
-                    amendment.line_to,
-                    amendment.amendment_type,
-                    amendment.original_text,
-                    amendment.new_text,
-                    amendment.motivation
+                    replaceNull(amendment.amendment_number),
+                    replaceNull(amendment.amendment_reference),
+                    replaceNull(amendment.conflicting_with),
+                    replaceNull(amendment.line_from),
+                    replaceNull(amendment.line_to),
+                    replaceNull(amendment.amendment_type),
+                    replaceNull(amendment.original_text),
+                    replaceNull(amendment.new_text),
+                    replaceNull(amendment.motivation)
                 ]
             );
         }
