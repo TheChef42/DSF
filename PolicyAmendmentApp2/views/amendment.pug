@@ -55,9 +55,11 @@ block content
     form(action="/send-amendments" method="POST")
       button(type="submit") Send Amendments
 
-    h1 Export Amendments
-    a(href="/export") Download as Word Document
-    a(href="/export-excel") Download as Excel Document
+
+    h2 View Submitted Amendments
+      a.button(href="/submitted-amendments") Go to Submitted Amendments
+
+
 
     h1 Amendments List
     table

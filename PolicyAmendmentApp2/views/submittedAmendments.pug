@@ -1,0 +1,40 @@
+extends layout
+
+block content
+    h1 Submitted Amendments
+
+    table
+        tr
+            th ÆF Nummer
+            th ÆF til ÆF Nummer
+            th Modstridende med
+            th Linje fra
+            th Linje til
+            th Indskrivning
+            th Stiller
+            th Medstillere
+            th Type af ÆF
+            th Oprindelig tekst
+            th Ny tekst
+            th Motivation for ÆF
+        each amendment in submittedAmendments
+            tr
+                td= amendment.æfNummer
+                td= amendment.æfTilÆfNummer
+                td= amendment.modstridendeMed
+                td= amendment.linjeFra
+                td= amendment.linjeTil
+                td= amendment.indskrivning
+                td= amendment.stiller
+                td= amendment.medstillere
+                td= amendment.typeAfÆf
+                td= amendment.oprindeligTekst
+                td= amendment.nyTekst
+                td= amendment.motivationForÆf
+
+    h2 Export Options
+    a.button(href="/export") Export All as Word Document
+    a.button(href="/export-excel") Export All as Excel Document
+
+    h2 Submit New Amendment
+    a.button(href="/amendment") Go Back to Submit New
