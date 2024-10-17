@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../db'); // Your database connection
 
 // Middleware for checking authentication
 function isAuthenticated(req, res, next) {
@@ -10,14 +11,16 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-// GET /amendment - Authenticated route to view locally stored amendments
-router.get('/', isAuthenticated, (req, res) => {
+// GET /amendment - Authenticated route to view amendments from the database
+router.get('/', isAuthenticated, async (req, res) => {
+    const userId = req.session.userId; // Retrieve user ID from the session
+
     try {
-        // Load amendments from the locally stored array
-        const amendments = global.storedAmendments || []; // Use empty array if undefined
+        // Query the database for amendments associated with the logged-in user
+        const [amendments] = await db.query('SELECT * FROM amendments WHERE user_id = ?', [userId]);
         res.render('amendment', { amendments }); // Render page with amendments data
     } catch (error) {
-        console.error('Error retrieving amendments from local array:', error);
+        console.error('Error retrieving amendments from database:', error);
         res.status(500).send('Error retrieving amendments');
     }
 });
