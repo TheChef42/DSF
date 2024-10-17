@@ -17,6 +17,8 @@ router.post('/', async (req, res) => {
                 continue; // Skip this amendment if user_id is not defined
             }
 
+            console.log(amendment)
+
             await db.query(
                 'INSERT INTO amendments (user_id, amendment_number, amendment_reference, conflicting_with, line_from, line_to, amendment_type, original_text, new_text, motivation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
