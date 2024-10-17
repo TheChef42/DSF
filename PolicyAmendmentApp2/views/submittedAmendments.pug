@@ -10,27 +10,21 @@ block content
             th Modstridende med
             th Linje fra
             th Linje til
-            th Indskrivning
-            th Stiller
-            th Medstillere
             th Type af ÆF
             th Oprindelig tekst
             th Ny tekst
             th Motivation for ÆF
         each amendment in submittedAmendments
             tr
-                td= amendment.æfNummer
-                td= amendment.æfTilÆfNummer
-                td= amendment.modstridendeMed
-                td= amendment.linjeFra
-                td= amendment.linjeTil
-                td= amendment.indskrivning
-                td= amendment.stiller
-                td= amendment.medstillere
-                td= amendment.typeAfÆf
-                td= amendment.oprindeligTekst
-                td= amendment.nyTekst
-                td= amendment.motivationForÆf
+                td= amendment.amendment_number
+                td= amendment.amendment_reference
+                td= amendment.conflicting_with
+                td= amendment.line_from
+                td= amendment.line_to
+                td= amendment.amendment_type
+                td= amendment.original_text
+                td= amendment.new_text
+                td= amendment.motivation
 
     h2 Export Options
     a.button(href="/export") Export All as Word Document
