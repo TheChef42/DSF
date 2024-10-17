@@ -1,4 +1,27 @@
 extends layout
+
+
+// Style button with some CSS for better appearance
+style.
+  .button-container {
+    margin-top: 15px;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .button:hover {
+    background-color: #0056b3;
+  }
+
 block content
   body
     h1 Submit a New Amendment
@@ -56,12 +79,13 @@ block content
       button(type="submit") Send Amendments
 
 
-    h2 View Submitted Amendments
+  // Add a button style for "Go to Submitted Amendments"
+  h2 View Submitted Amendments
+    div.button-container
       a.button(href="/submitted-amendments") Go to Submitted Amendments
 
 
-
-    h1 Amendments List
+  h1 Amendments List
     table
       tr
         th ÆF Nummer
