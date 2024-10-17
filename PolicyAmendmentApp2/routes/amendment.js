@@ -12,17 +12,9 @@ function isAuthenticated(req, res, next) {
 }
 
 // GET /amendment - Authenticated route to view amendments from the database
-router.get('/', isAuthenticated, async (req, res) => {
-    const userId = req.session.userId; // Retrieve user ID from the session
-
-    try {
-        // Query the database for amendments associated with the logged-in user
-        const [amendments] = await db.query('SELECT * FROM amendments WHERE user_id = ?', [userId]);
-        res.render('amendment', { amendments }); // Render page with amendments data
-    } catch (error) {
-        console.error('Error retrieving amendments from database:', error);
-        res.status(500).send('Error retrieving amendments');
-    }
+// In routes/amendment.js
+router.get('/', isAuthenticated, (req, res) => {
+    res.render('amendment', { amendments: global.storedAmendments });
 });
 
 module.exports = router;
