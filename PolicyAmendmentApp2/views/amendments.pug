@@ -1,0 +1,90 @@
+extends layout
+block content
+  body
+    h1 Submit a New Amendment
+
+    form(action="/submit-amendment" method="POST")
+      label(for="æfNummer") ÆF Nummer:
+      input(type="text" name="æfNummer" required)
+
+      label(for="æfTilÆfNummer") ÆF til ÆF Nummer:
+      input(type="text" name="æfTilÆfNummer" required)
+
+      label(for="modstridendeMed") Modstridende med:
+      input(type="text" name="modstridendeMed")
+
+      label(for="linjeFra") Linje fra:
+      input(type="number" name="linjeFra")
+
+      label(for="linjeTil") Linje til:
+      input(type="number" name="linjeTil")
+
+      label(for="indskrivning") Indskrivning:
+      textarea(name="indskrivning")
+
+      label(for="stiller") Stiller:
+      input(type="text" name="stiller" required)
+
+      label(for="medstillere") Medstillere:
+      input(type="text" name="medstillere")
+
+      label(for="typeAfÆf") Type af ÆF:
+      select(name="typeAfÆf" required)
+        option(value="tilføj") Tilføj
+        option(value="erstat") Erstat
+        option(value="slet") Slet
+
+      label(for="oprindeligTekst") Oprindelig tekst:
+      textarea(name="oprindeligTekst")
+
+      label(for="nyTekst") Ny tekst:
+      textarea(name="nyTekst")
+
+      label(for="motivationForÆf") Motivation for ÆF:
+      textarea(name="motivationForÆf")
+
+      button(type="submit") Submit Amendment
+
+    h1 Upload Amendments via Excel
+    form(action="/upload" method="POST" enctype="multipart/form-data")
+      input(type="file" name="file")
+      button(type="submit") Upload
+
+    // Form to send amendments to server folder
+    h1 Send Amendments to Server
+    form(action="/send-amendments" method="POST")
+      button(type="submit") Send Amendments
+
+    h1 Export Amendments
+    a(href="/export") Download as Word Document
+    a(href="/export-excel") Download as Excel Document
+
+    h1 Amendments List
+    table
+      tr
+        th ÆF Nummer
+        th ÆF til ÆF Nummer
+        th Modstridende med
+        th Linje fra
+        th Linje til
+        th Indskrivning
+        th Stiller
+        th Medstillere
+        th Type af ÆF
+        th Oprindelig tekst
+        th Ny tekst
+        th Motivation for ÆF
+      each amendment in amendments
+        tr
+          td= amendment.æfNummer
+          td= amendment.æfTilÆfNummer
+          td= amendment.modstridendeMed
+          td= amendment.linjeFra
+          td= amendment.linjeTil
+          td= amendment.indskrivning
+          td= amendment.stiller
+          td= amendment.medstillere
+          td= amendment.typeAfÆf
+          td= amendment.oprindeligTekst
+          td= amendment.nyTekst
+          td= amendment.motivationForÆf
