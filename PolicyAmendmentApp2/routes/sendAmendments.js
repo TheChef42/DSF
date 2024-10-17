@@ -5,8 +5,13 @@ const db = require('../db'); // Your database connection
 // Route to handle saving amendments to the database
 router.post('/', async (req, res) => {
     try {
-        // Loop through each amendment in the global array and save it to the database
+        // Loop through each amendment in the global array
         for (const amendment of global.storedAmendments) {
+            if (!amendment.user_id) {
+                console.error('User ID is missing for amendment:', amendment);
+                continue; // Skip this amendment if user_id is not defined
+            }
+
             await db.query(
                 'INSERT INTO amendments (user_id, amendment_number, amendment_reference, conflicting_with, line_from, line_to, amendment_type, original_text, new_text, motivation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [
@@ -24,7 +29,7 @@ router.post('/', async (req, res) => {
             );
         }
 
-        // Clear the in-memory amendments list
+        // Clear the in-memory amendments list after saving
         global.storedAmendments.length = 0;
 
         // Redirect to confirmation page
