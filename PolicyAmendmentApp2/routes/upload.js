@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
             }
         });
     }
-    res.redirect('/');
+    res.redirect('/amendment');
 });
 
 module.exports = router;

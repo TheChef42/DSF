@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
     };
 
     global.storedAmendments.push(amendment);
-    res.redirect('/');
+    res.redirect('amendment');
 });
 
 module.exports = router;

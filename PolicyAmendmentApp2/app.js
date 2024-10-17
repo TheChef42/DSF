@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const app = express();
+global.storedAmendments = []; // Initialize globally accessible array
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
