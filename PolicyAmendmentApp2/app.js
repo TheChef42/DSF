@@ -47,7 +47,7 @@ app.use('/', mainRoute);
 app.use('/user', userRoute);
 
 // Protected routes that require authentication
-app.use('/amendment', isAuthenticated, mainRoute);
+app.use('/amendment', isAuthenticated, amendmentRoute);
 app.use('/submit-amendment', isAuthenticated, submitRoute);
 app.use('/upload', isAuthenticated, uploadRoute);
 app.use('/export', isAuthenticated, downloadRoute);

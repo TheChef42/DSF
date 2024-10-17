@@ -20,8 +20,13 @@ router.get('/', isAuthenticated, async (req, res) => {
         const [amendments] = await db.query('SELECT * FROM amendments WHERE user_id = ?', [userId]);
         res.render('amendment', { amendments }); // Render the amendments page with data
     } catch (error) {
-        console.error('Error retrieving amendments:', error);
-        res.status(500).send('Error retrieving amendments');
+        if (error.code === 'ER_NO_SUCH_TABLE') {
+            console.log('Table does not exist, skipping query.');
+            res.render('amendment', { amendments: [] }); // Render page with empty data
+        } else {
+            console.error('Error retrieving amendments:', error);
+            res.status(500).send('Error retrieving amendments');
+        }
     }
 });
 
