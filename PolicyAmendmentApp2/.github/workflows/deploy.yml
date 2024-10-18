@@ -1,0 +1,20 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Build the project
+        run: npm run build
+      - name: Deploy to server
+        run: |
+          scp -r ./build user@yourserver:/path/to/your/project
+          ssh user@yourserver 'cd /path/to/your/project && npm install && pm2 restart app'
