@@ -1,17 +1,18 @@
 extends layout
 
 block content
-    body
-        h1 Login
+    h1 Login
 
-        form(action="/user/login" method="POST" class="login-form")
-            label(for="username") Username:
-            input(type="text" name="username" required)
+    form(action="/user/login" method="POST" class="form-container")
+        label(for="name") Full Name:
+        input(type="text" name="name" required)
 
-            label(for="password") Password:
-            input(type="password" name="password" required)
+        label(for="password") Password:
+        input(type="password" name="password" required)
 
-            button(type="submit") Login
+        button(type="submit") Login
 
-        p Don't have an account?
-            a(href="/user/register") Register Here
+    p Don't have an account? Contact someone ¯\_(ツ)_/¯
+
+    if error
+        p.error-message= error

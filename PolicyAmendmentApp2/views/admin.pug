@@ -5,42 +5,47 @@ block content
 
     table
         tr
-            th Username
+            th Name
+            th Email
             th Role
+            th Signup Status
             th Actions
         each user, index in users
             tr
-                td= user.username
+                td= user.name
+                td= user.email
                 td
-                    div(roleContainerId=`role-container-${index}`)
+                    div(roleContainerId=`role-container-${index}` class="role-container")
                         // Display the current role by default
                         span(id=`role-span-${index}` class="role-display")= user.role
                         // Role edit form (hidden by default)
-                        form(action=`/admin/edit-role/${user.id}` method="POST" id=`edit-role-form-${index}` class="form-inline" style="display:none; margin:0;")
+                        form(action=`/admin/edit-role/${user.id}` method="POST" id=`edit-role-form-${index}` class="form-inline role-edit-form" style="display:none; margin:0;")
                             select(name="role" required)
                                 option(value="admin" selected=user.role === 'admin') Admin
                                 option(value="redaktionsMedlem" selected=user.role === 'redaktionsMedlem') Redaktions Medlem
                                 option(value="medlemsOrganisation" selected=user.role === 'medlemsOrganisation') Medlems Organisation
                             button(type="submit" class="button-save") Save
+                td= user.signup_status
                 td.actions
                     button(type="button" class="button-edit" onclick=`toggleEditRole(${index})`) Edit
                     a.button-delete(href=`/admin/delete/${user.id}` onclick="return confirmDelete()") Delete
 
-    h2 Add New User
-    form(action="/admin/add" method="POST" class="form-container")
-        label(for="username") Username:
-        input(type="text" name="username" required)
 
-        label(for="password") Password:
-        input(type="password" name="password" required)
+    h2 Send Invitation
+        form(action="/admin/invite" method="POST" class="form-container")
+            label(for="name") Full Name:
+            input(type="text" name="name" required)
 
-        label(for="role") Role:
-        select(name="role" required)
-            option(value="admin") Admin
-            option(value="redaktionsMedlem") Redaktions Medlem
-            option(value="medlemsOrganisation") Medlems Organisation
+            label(for="email") Email:
+            input(type="email" name="email" required)
 
-        button(type="submit") Add User
+            label(for="role") Role:
+            select(name="role" required)
+                option(value="admin") Admin
+                option(value="redaktionsMedlem") Redaktions Medlem
+                option(value="medlemsOrganisation") Medlems Organisation
+
+            button(type="submit") Send Invitation
 
     script.
         function confirmDelete() {

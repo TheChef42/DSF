@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const app = express();
+const nodemailer = require('nodemailer');
 global.storedAmendments = []; // Initialize globally accessible array
 
 app.set('view engine', 'pug');
@@ -41,6 +42,8 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+
+
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
 });
@@ -59,6 +62,7 @@ app.use('/export-excel', isAuthenticated, exportExcelRoute);
 app.use('/confirmation', isAuthenticated, confirmationRoute);
 app.use('/submitted-amendments',isAuthenticated, submittedAmendmentsRoute);
 app.use('/admin', isAuthenticated, adminRouter);
+
 
 
 
