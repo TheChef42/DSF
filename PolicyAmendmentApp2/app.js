@@ -1,9 +1,14 @@
 const express = require('express');
 const session = require('express-session');
+const fs = require('fs');
 const path = require('path');
+const http = require('http');
+const https = require('https');
 const app = express();
 const nodemailer = require('nodemailer');
+const config = require('./config'); // Import the configuration
 global.storedAmendments = []; // Initialize globally accessible array
+
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -11,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(require('express-fileupload')());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // Import routes
 const mainRoute = require('./routes/main');
@@ -69,7 +76,33 @@ app.use('/submitted-amendments',isAuthenticated, submittedAmendmentsRoute);
 app.use('/admin', isAuthenticated, adminRouter);
 
 
+// Determine which server to start (HTTP or HTTPS) based on the configuration
+if (config.https) {
+    // Production setup - HTTPS
+    const httpsOptions = {
+        key: fs.readFileSync(config.httpsOptions.key),
+        cert: fs.readFileSync(config.httpsOptions.cert)
+    };
 
+    // Create an HTTPS server
+    const httpsServer = https.createServer(httpsOptions, app);
+    httpsServer.listen(config.port, () => {
+        console.log(`HTTPS server running on port ${config.port}`);
+    });
 
-const PORT = 80;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    // Optional: HTTP server that redirects to HTTPS
+    http.createServer((req, res) => {
+        res.writeHead(301, {
+            Location: `https://${req.headers.host}${req.url}`
+        });
+        res.end();
+    }).listen(config.httpRedirectPort, () => {
+        console.log(`HTTP server redirecting to HTTPS on port ${config.httpRedirectPort}`);
+    });
+} else {
+    // Development setup - HTTP only
+    const httpServer = http.createServer(app);
+    httpServer.listen(config.port, () => {
+        console.log(`HTTP server running on port ${config.port}`);
+    });
+}
