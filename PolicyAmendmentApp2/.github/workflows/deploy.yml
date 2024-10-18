@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Server
 
 on:
   push:
@@ -8,13 +8,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm install
-      - name: Build the project
-        run: npm run build
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 130.225.39.149 >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOYKEY }}
+
       - name: Deploy to server
         run: |
-          scp -r ./build user@yourserver:/path/to/your/project
-          ssh user@yourserver 'cd /path/to/your/project && npm install && pm2 restart app'
+          ssh -i ~/.ssh/id_rsa ubuntu@130.225.39.149 "cd /path/to/app && git pull && npm install && pm2 restart all"
