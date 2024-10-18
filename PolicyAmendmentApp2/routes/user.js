@@ -7,6 +7,8 @@ const router = express.Router();
 // Middleware to restrict access to authenticated users
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
+        res.locals.user = req.session.user; // Make user info available to templates
+        res.locals.role = req.session.role; // Make role available to templates
         next();
     } else {
         res.redirect('/user/login');
@@ -107,7 +109,7 @@ router.post('/login', async (req, res) => {
             if (await bcrypt.compare(password, user.password)) {
                 console.log("Password correct, logging in.");
                 // Store user details in session
-                req.session.user = user.name;
+                req.session.user = user.name; // Set user name in session
                 req.session.userId = user.id; // Store the user ID for later use
                 req.session.role = user.role; // Store the user role
                 res.redirect('/amendment');

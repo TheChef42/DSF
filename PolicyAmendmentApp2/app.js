@@ -33,6 +33,11 @@ app.use(session({
     cookie: { secure: false } // Set to true in production with HTTPS
 }));
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.user; // Set the user from session to be available globally
+    next();
+});
+
 // Middleware for checking authentication
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
