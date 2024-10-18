@@ -172,10 +172,11 @@ ul li {
     margin-bottom: 5px;
 }
 
+/* User Information Styling */
 .user-info-container {
     position: fixed;
     top: 10px;
-    right: 150px; /* Adjusted so it doesn't overlap with the admin button */
+    left: 10px; /* Change from right to left to move it to the left side */
     z-index: 1000;
     background-color: #f4f4f9;
     padding: 10px;
