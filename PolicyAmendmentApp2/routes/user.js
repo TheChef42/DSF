@@ -73,7 +73,7 @@ router.post('/register', [
         res.redirect('/user/login'); // Redirect to login after successful registration
     } catch (error) {
         console.error('Error registering user:', error);
-        res.status(500).send('Error registering user');
+        res.render('register', { errors: [{ msg: error.sqlMessage }], token, email, name, role, isInvited: token ? true : false });
     }
 });
 
