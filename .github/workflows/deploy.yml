@@ -24,4 +24,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@130.225.39.149 "cd DSF/PolicyAmendmentApp2/ && sudo -s && git pull && npm install && pm2 restart all"
+          ssh -i ~/.ssh/id_rsa ubuntu@130.225.39.149 "cd DSF/PolicyAmendmentApp2/ && sudo git pull && sudo npm install && sudo pm2 restart all"
