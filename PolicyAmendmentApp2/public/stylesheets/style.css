@@ -79,6 +79,7 @@ form label {
 form input[type="text"],
 form input[type="password"],
 form input[type="number"],
+form input[type="email"],
 form select,
 form textarea {
     width: 100%;
@@ -170,3 +171,38 @@ ul {
 ul li {
     margin-bottom: 5px;
 }
+
+.user-info-container {
+    position: fixed;
+    top: 10px;
+    right: 150px; /* Adjusted so it doesn't overlap with the admin button */
+    z-index: 1000;
+    background-color: #f4f4f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    color: #333;
+    font-weight: bold;
+}
+
+.logout-button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #357ABD;
+}
+

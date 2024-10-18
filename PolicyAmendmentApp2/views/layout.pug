@@ -4,7 +4,13 @@ html
         title My App
         link(rel="stylesheet" href="/stylesheets/style.css")
     body
-        // Role-based buttons
+        // Display the logged-in user's name in the top-right corner
+        if user
+            div.user-info-container
+                span.user-name Welcome, #{user.name}
+                a.logout-button(href="/user/logout") Logout
+
+        // Role-based buttons for the admin panel
         if role === 'admin'
             div.admin-panel-button-container
                 button.admin-panel-button(onclick="window.location.href='/admin'") Admin Panel

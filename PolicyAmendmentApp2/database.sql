@@ -21,12 +21,15 @@ CREATE TABLE `amendments` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL UNIQUE,
+  `name` varchar(255) NOT NULL UNIQUE,
+  `role` ENUM('admin', 'redaktionsMedlem', 'medlemsOrganisation') NOT NULL,
+  `signup_status` ENUM('pending', 'completed') DEFAULT 'pending',
+  `invitation_token` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET TIME_ZONE=@OLD_TIME_ZONE;
 SET SQL_MODE=@OLD_SQL_MODE;

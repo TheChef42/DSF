@@ -1,25 +1,39 @@
 extends layout
 
 block content
-    head
-        title Register
-    body
-        h1 Register
-        form(action="/user/register" method="POST" class="register-form")
-            div
-                label(for="username") Username:
-                input(type="text" name="username" required)
-            div
-                label(for="password") Password:
-                input(type="password" name="password" required)
-            div
-                label(for="role") Role:
-                select(name="role" required)
-                    option(value="admin") Admin
-                    option(value="redaktionsMedlem") Redaktions Medlem
-                    option(value="medlemsOrganisation") Medlems Organisation
-            button(type="submit") Register
-        if errors
-            ul
-                each error in errors
-                    li= error.msg
+    h1 Register
+
+    if errors
+        ul
+            each error in errors
+                li= error.msg
+
+    form(action="/user/register" method="POST")
+        input(type="hidden" name="token" value=token)
+
+        label(for="name") Name:
+        if isInvited
+            input(type="text" name="name" value=name readonly)
+        else
+            input(type="text" name="name" value=name required)
+
+        label(for="email") Email:
+        if isInvited
+            input(type="email" name="email" value=email readonly)
+        else
+            input(type="email" name="email" value=email required)
+
+        if !isInvited
+            label(for="role") Role:
+            select(name="role" required)
+                option(value="admin") Admin
+                option(value="redaktionsMedlem") Redaktions Medlem
+                option(value="medlemsOrganisation") Medlems Organisation
+
+        label(for="password") Password:
+        input(type="password" name="password" required)
+
+        label(for="confirmPassword") Confirm Password:
+        input(type="password" name="confirmPassword" required)
+
+        button(type="submit") Register
