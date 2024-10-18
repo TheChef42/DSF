@@ -13,8 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup SSH
+      - name: Set up SSH
         run: |
+          mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 130.225.39.149 >> ~/.ssh/known_hosts
@@ -23,4 +24,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@130.225.39.149 "cd /path/to/app && git pull && npm install && pm2 restart all"
+          ssh -i ~/.ssh/id_rsa ubuntu@130.225.39.149 "cd DSF/PolicyAmendmentApp2/ && sudo git pull && sudo npm install && sudo pm2 restart all"

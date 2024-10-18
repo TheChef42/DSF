@@ -1,11 +1,11 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
-// Replace with your MySQL server details
 const pool = mysql.createPool({
-    host: '130.225.39.23',    // IP of your MySQL server
-    user: 'root',   // MySQL username
-    password: 'root', // MySQL password
-    database: 'user_management'  // Database name
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
-module.exports = pool.promise(); // Use promise-based queries
+module.exports = pool.promise();
