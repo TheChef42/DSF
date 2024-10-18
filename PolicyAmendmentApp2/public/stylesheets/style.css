@@ -1,0 +1,172 @@
+/* General body and headings */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2 {
+    color: #4A90E2;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Table Styling */
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+}
+
+table th {
+    background-color: #4A90E2;
+    color: white;
+    text-transform: uppercase;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+td.actions {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Default Form Styling */
+form {
+    background-color: #fff;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-inline {
+    display: inline-flex;
+    align-items: center;
+}
+
+.form-edit-row {
+    display: contents;
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="number"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Adjusted Button Styling */
+form button,
+.button-edit,
+.button-save,
+.button-delete {
+    background-color: #4A90E2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form button:hover,
+.button-edit:hover,
+.button-save:hover {
+    background-color: #357ABD;
+}
+
+.button-delete {
+    background-color: #FF4C4C;
+}
+
+.button-delete:hover {
+    background-color: #E63946;
+    transform: scale(1.05);
+}
+
+/* Admin Panel Button Positioning */
+.admin-panel-button-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.admin-panel-button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.admin-panel-button:hover {
+    background-color: #357ABD;
+    transform: scale(1.05);
+}
+
+/* Utility Classes for Links and Errors */
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+a {
+    color: #4A90E2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    color: #FF4C4C;
+    margin-top: 10px;
+}
+
+ul li {
+    margin-bottom: 5px;
+}

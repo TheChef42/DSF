@@ -1,16 +1,23 @@
 extends layout
+
 block content
     head
         title Register
     body
         h1 Register
-        form(action="/user/register" method="POST")
+        form(action="/user/register" method="POST" class="register-form")
             div
                 label(for="username") Username:
                 input(type="text" name="username" required)
             div
                 label(for="password") Password:
                 input(type="password" name="password" required)
+            div
+                label(for="role") Role:
+                select(name="role" required)
+                    option(value="admin") Admin
+                    option(value="redaktionsMedlem") Redaktions Medlem
+                    option(value="medlemsOrganisation") Medlems Organisation
             button(type="submit") Register
         if errors
             ul

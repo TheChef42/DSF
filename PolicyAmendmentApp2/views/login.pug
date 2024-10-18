@@ -1,21 +1,17 @@
 extends layout
 
 block content
-    h1 Login
-    form(action="/user/login" method="POST")
-        div
+    body
+        h1 Login
+
+        form(action="/user/login" method="POST" class="login-form")
             label(for="username") Username:
             input(type="text" name="username" required)
-        div
+
             label(for="password") Password:
             input(type="password" name="password" required)
-        button(type="submit") Login
 
-        // Display error message if login fails
-        if error
-            p(style="color: red;")= error
+            button(type="submit") Login
 
-    // Add a link to the registration page
-    p
-        | Don't have an account?
-        a(href="/user/register") Register Here
+        p Don't have an account?
+            a(href="/user/register") Register Here

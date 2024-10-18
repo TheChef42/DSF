@@ -1,26 +1,22 @@
 extends layout
+
 block content
   body
+
     h1 Submit a New Amendment
 
-    form(action="/submit-amendment" method="POST")
+    form(action="/submit-amendment" method="POST" )
       label(for="æfNummer") ÆF Nummer:
       input(type="text" name="æfNummer" required)
 
       label(for="æfTilÆfNummer") ÆF til ÆF Nummer:
       input(type="text" name="æfTilÆfNummer" required)
 
-      label(for="modstridendeMed") Modstridende med:
-      input(type="text" name="modstridendeMed")
-
       label(for="linjeFra") Linje fra:
       input(type="number" name="linjeFra")
 
       label(for="linjeTil") Linje til:
       input(type="number" name="linjeTil")
-
-      label(for="indskrivning") Indskrivning:
-      textarea(name="indskrivning")
 
       label(for="stiller") Stiller:
       input(type="text" name="stiller" required)
@@ -46,21 +42,18 @@ block content
       button(type="submit") Submit Amendment
 
     h1 Upload Amendments via Excel
-    form(action="/upload" method="POST" enctype="multipart/form-data")
+    form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form")
       input(type="file" name="file")
       button(type="submit") Upload
 
     // Form to send amendments to server folder
     h1 Send Amendments to Server
-    form(action="/send-amendments" method="POST")
+    form(action="/send-amendments" method="POST" class="send-amendments-form")
       button(type="submit") Send Amendments
 
-
-  // Add a button style for "Go to Submitted Amendments"
-  h2 View Submitted Amendments
+    h1 View Submitted Amendments
     div.button-container
       a.button(href="/submitted-amendments") Go to Submitted Amendments
-
 
     h1 Amendments List
     table

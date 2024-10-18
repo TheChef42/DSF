@@ -14,7 +14,8 @@ function isAuthenticated(req, res, next) {
 // GET /amendment - Authenticated route to view amendments from the database
 // In routes/amendment.js
 router.get('/', isAuthenticated, (req, res) => {
-    res.render('amendment', { amendments: global.storedAmendments });
+    const role = req.session.role;
+    res.render('amendment', { amendments: global.storedAmendments, role: role });
 });
 
 module.exports = router;
