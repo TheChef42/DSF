@@ -22,7 +22,8 @@ router.get('/register', (req, res) => {
 // Registration Route - POST
 router.post('/register', [
     check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
-    check('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long')
+    check('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
+    check('role').isIn(['admin', 'redaktionsMedlem', 'medlemsOrganisation']).withMessage('Invalid role selected')
 ], async (req, res) => {
     console.log("Received registration form submission.");
     const errors = validationResult(req);
@@ -31,13 +32,13 @@ router.post('/register', [
         return res.render('register', { errors: errors.array() });
     }
 
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(`Registering user: ${username}`);
+    console.log(`Registering user: ${username}, Role: ${role}`);
 
     try {
-        // Insert the new user into the database
-        await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+        // Insert the new user with the role into the database
+        await db.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, hashedPassword, role]);
         console.log("User registered successfully.");
         res.redirect('/user/login');
     } catch (error) {
@@ -58,6 +59,7 @@ router.get('/login', (req, res) => {
 });
 
 // Login Route - POST
+// Login Route - POST
 router.post('/login', async (req, res) => {
     console.log("Received login form submission.");
     const { username, password } = req.body;
@@ -73,9 +75,10 @@ router.post('/login', async (req, res) => {
             // Check password
             if (await bcrypt.compare(password, user.password)) {
                 console.log("Password correct, logging in.");
-                // Store user ID and username in session
+                // Store user details in session
                 req.session.user = user.username;
                 req.session.userId = user.id; // Store the user ID for later use
+                req.session.role = user.role; // Store the user role
                 res.redirect('/amendment');
             } else {
                 console.log("Incorrect password.");
@@ -90,7 +93,6 @@ router.post('/login', async (req, res) => {
         res.status(500).send('Error logging in');
     }
 });
-
 // Logout Route
 router.get('/logout', (req, res) => {
     console.log("User logged out.");

@@ -22,7 +22,7 @@ const confirmationRoute = require('./routes/confirmation');
 const userRoute = require('./routes/user'); // User routes
 const amendmentRoute = require('./routes/amendment');
 const submittedAmendmentsRoute = require('./routes/submittedAmendments');
-
+const adminRouter = require('./routes/admin');
 
 // Middleware for session handling
 app.use(session({
@@ -58,6 +58,7 @@ app.use('/send-amendments', isAuthenticated, sendAmendmentsRoute);
 app.use('/export-excel', isAuthenticated, exportExcelRoute);
 app.use('/confirmation', isAuthenticated, confirmationRoute);
 app.use('/submitted-amendments',isAuthenticated, submittedAmendmentsRoute);
+app.use('/admin', isAuthenticated, adminRouter);
 
 
 
