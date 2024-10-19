@@ -151,13 +151,32 @@ button {
     background-color: #4A90E2;
     color: white;
     padding: 10px 20px;
-    margin-top: 20px;
+    margin-bottom: 20px;
     font-size: 14px;
     cursor: pointer;
     border-radius: 4px;
     border: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, transform 0.2s;
+}
+
+button.active {
+    background-color: white;
+    color: #4A90E2;
+}
+
+.large {
+    font-size: large;
+}
+
+.paper {
+    position: fixed;
+    display: flex;
+    top: 35%;
+    left: 5%;
+    width: min-content;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 /* Utility Classes for Links and Errors */

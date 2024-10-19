@@ -5,8 +5,10 @@ block content
 
     h1 Submit a #{selectedPaper}
 
-    each paper in papers
-      button.paper #{paper.name}
+    div.container.paper
+      each paper in papers
+        a(href="/amendment/" + paper.name)
+          button.large(class=paper.name === selectedPaper ? 'active' : '') #{paper.name}
 
 
     form(action="/submit-amendment" method="POST" )
