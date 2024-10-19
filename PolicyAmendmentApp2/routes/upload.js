@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         await workbook.xlsx.load(file.data);
 
         // Clear existing amendments
-        global.storedAmendments.length = 0;
+        req.session.storedAmendments.length = 0;
 
         const worksheet = workbook.getWorksheet(1); // Assuming data is on the first sheet
 
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
                     nyTekst: row.getCell(11).value || "",         // Column 11
                     motivationForÆf: row.getCell(12).value || ""  // Column 12
                 };
-                global.storedAmendments.push(amendment);
+                req.session.storedAmendments.push(amendment);
             }
         });
     }

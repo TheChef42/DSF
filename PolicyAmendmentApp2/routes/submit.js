@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
         motivationForÆf: req.body.motivationForÆf
     };
 
-    global.storedAmendments.push(amendment);
+    req.session.storedAmendments.push(amendment);
     res.redirect('amendment');
 });
 

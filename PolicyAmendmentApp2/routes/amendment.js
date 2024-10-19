@@ -16,7 +16,7 @@ router.get('/:papers', isAuthenticated, async (req, res) => {
     const role = req.session.role;
     const paper = req.params.papers;
     const [papers] = await db.query('SELECT id, name FROM papers');
-    res.render('amendment', {amendments: global.storedAmendments, papers, selectedPaper: paper, role: role});
+    res.render('amendment', {amendments: req.session.storedAmendments, papers, selectedPaper: paper, role: role});
 });
 
 module.exports = router;
