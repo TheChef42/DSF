@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 Welcome to the amendment home page
+    p Please select the paper you would like to work on:
+
+    each paper in papers
+        a(href="/amendment/" + paper.name)
+            button.paper #{paper.name}

@@ -3,7 +3,11 @@ extends layout
 block content
   body
 
-    h1 Submit a New Amendment
+    h1 Submit a #{selectedPaper}
+
+    each paper in papers
+      button.paper #{paper.name}
+
 
     form(action="/submit-amendment" method="POST" )
       label(for="æfNummer") ÆF Nummer:

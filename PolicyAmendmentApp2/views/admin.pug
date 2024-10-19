@@ -33,8 +33,13 @@ block content
 
     h2 Send Invitation
         form(action="/admin/invite" method="POST" class="form-container")
-            label(for="name") Full Name:
+            label(for="name") Username:
             input(type="text" name="name" required)
+
+            label(for="organisation") Organisation:
+            select(name="organisation" required)
+                each organisation in organisations
+                    option(value=organisation.abbreviation) #{organisation.name} - #{organisation.university}
 
             label(for="email") Email:
             input(type="email" name="email" required)

@@ -17,6 +17,12 @@ block content
         else
             input(type="text" name="name" value=name required)
 
+        label(for="organisation") Name:
+        if isInvited
+            input(type="text" name="organisation" value=name readonly)
+        else
+            input(type="text" name="organisation" value=name required)
+
         label(for="email") Email:
         if isInvited
             input(type="email" name="email" value=email readonly)

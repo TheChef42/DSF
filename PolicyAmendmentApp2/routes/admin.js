@@ -20,7 +20,8 @@ router.get('/', isAuthenticated, async (req, res) => {
     try {
         // Fetching the necessary columns from the users table
         const [users] = await db.query('SELECT id, name, email, role, signup_status FROM users');
-        res.render('admin', { users });
+        const [organisations] = await db.query('SELECT name, abbreviation, university FROM organisations');
+        res.render('admin', { users, organisations });
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).send('Error fetching users');

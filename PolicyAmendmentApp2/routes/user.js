@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
                 req.session.user = user.name; // Set user name in session
                 req.session.userId = user.id; // Store the user ID for later use
                 req.session.role = user.role; // Store the user role
-                res.redirect('/amendment');
+                res.redirect('/home');
             } else {
                 console.log("Incorrect password.");
                 res.render('login', { error: 'Invalid name or password' });

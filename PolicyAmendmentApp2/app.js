@@ -31,6 +31,7 @@ const userRoute = require('./routes/user'); // User routes
 const amendmentRoute = require('./routes/amendment');
 const submittedAmendmentsRoute = require('./routes/submittedAmendments');
 const adminRouter = require('./routes/admin');
+const homeRouter = require('./routes/home');
 
 // Middleware for session handling
 app.use(session({
@@ -74,7 +75,7 @@ app.use('/export-excel', isAuthenticated, exportExcelRoute);
 app.use('/confirmation', isAuthenticated, confirmationRoute);
 app.use('/submitted-amendments',isAuthenticated, submittedAmendmentsRoute);
 app.use('/admin', isAuthenticated, adminRouter);
-
+app.use('/home', isAuthenticated, homeRouter);
 
 // Determine which server to start (HTTP or HTTPS) based on the configuration
 if (config.https) {
