@@ -1,7 +1,11 @@
 extends layout
 
 block content
+  head
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css")
   body
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js")
 
     if error
       p.error-message(style="color: red;")= error
@@ -30,10 +34,12 @@ block content
       input(type="number" name="linjeTil")
 
       label(for="stiller") Stiller:
-      input(type="text" name="stiller" required)
+      input(type="text" name="stiller" value=proposer readonly)
 
       label(for="medstillere") Medstillere:
-      input(type="text" name="medstillere")
+      select(name="medstillere[]" multiple="multiple" class="select2" required)
+        each org in organisations
+          option(value=org.abbreviation)= org.name + ' - ' + org.university + ' (' + org.abbreviation + ')'
 
       label(for="typeAfÆf") Type af ÆF:
       select(name="typeAfÆf" required)
@@ -50,12 +56,25 @@ block content
       label(for="motivationForÆf") Motivation for ÆF:
       textarea(name="motivationForÆf")
 
+      label(for="oprindeligTekstEngelsk") Oprindelig tekst (engelsk):
+      textarea(name="oprindeligTekstEngelsk")
+
+      label(for="nyTekstEngelsk") Ny tekst (engelsk):
+      textarea(name="nyTekstEngelsk")
+
+      label(for="motivationForÆfEngelsk") Motivation for ÆF (engelsk):
+      textarea(name="motivationForÆfEngelsk")
+
       button(type="submit") Submit Amendment
 
     h1 Upload Amendments via Excel
     form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form")
       input(type="file" name="file" accept=".xls,.xlsx" required)
-      button(type="submit") Upload
+      button(type="submit" style="margin-right: 10px;") Upload
+      a(href="/download-template/danish" style="margin-right: 10px;")
+        button(type="button") Download Danish Template
+      a(href="/download-template/english")
+        button(type="button") Download English Template
 
     // Form to send amendments to server folder
     h1 Send Amendments to Server
@@ -98,6 +117,25 @@ block content
             button(type="button" style="background-color: red; color: white;" onclick=`deleteAmendment(${amendment.id})`) Delete
 
     script.
+      $(document).ready(function () {
+        function formatOrg(org) {
+          if (!org.id) {
+            return org.text;
+          }
+          const text = $(org.element).text();
+          return $('<span>' + text + '</span>');
+        }
+
+        function formatOrgSelection(org) {
+          return org.id;
+        }
+
+        $('.select2').select2({
+          templateResult: formatOrg,
+          templateSelection: formatOrgSelection
+        });
+      });
+
       function deleteAmendment(id) {
         if (confirm('Are you sure you want to delete this amendment?')) {
           fetch(`/amendment/${id}`, {

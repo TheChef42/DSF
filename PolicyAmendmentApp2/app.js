@@ -97,6 +97,7 @@ const amendmentRoute = require('./routes/amendment');
 const submittedAmendmentsRoute = require('./routes/submittedAmendments');
 const adminRouter = require('./routes/admin');
 const homeRouter = require('./routes/home');
+const downloadTemplateRouter = require('./routes/downloadTemplate');
 
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
@@ -117,6 +118,7 @@ app.use('/confirmation', isAuthenticated, confirmationRoute);
 app.use('/submitted-amendments', isAuthenticated, submittedAmendmentsRoute);
 app.use('/admin', isAuthenticated, adminRouter);
 app.use('/home', isAuthenticated, homeRouter);
+app.use('/download-template', isAuthenticated, downloadTemplateRouter);
 
 // Determine which server to start (HTTP or HTTPS) based on the configuration
 if (config.https) {
