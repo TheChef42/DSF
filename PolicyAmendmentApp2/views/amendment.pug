@@ -3,6 +3,12 @@ extends layout
 block content
   body
 
+    if error
+      p.error-message(style="color: red;")= error
+
+    if success
+      p.success-message(style="color: green;")= success
+
     h1 Submit a #{selectedPaper}
 
     div.container.paper
@@ -10,8 +16,7 @@ block content
         a(href="/amendment/" + paper.name)
           button.large(class=paper.name === selectedPaper ? 'active' : '') #{paper.name}
 
-
-    form(action="/submit-amendment" method="POST" )
+    form(action="/submit-amendment" method="POST")
       label(for="æfNummer") ÆF Nummer:
       input(type="text" name="æfNummer" required)
 
@@ -49,7 +54,7 @@ block content
 
     h1 Upload Amendments via Excel
     form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form")
-      input(type="file" name="file")
+      input(type="file" name="file" accept=".xls,.xlsx" required)
       button(type="submit") Upload
 
     // Form to send amendments to server folder

@@ -176,6 +176,17 @@ button.active {
     left: 5%;
     width: min-content;
     justify-content: space-around;
+    flex-wrap: wrap
+}
+
+
+.paperCenter {
+    position: center;
+    display: flex;
+    top: 35%;
+    left: 5%;
+    width: min-content;
+    justify-content: space-around;
     flex-wrap: wrap;
 }
 
