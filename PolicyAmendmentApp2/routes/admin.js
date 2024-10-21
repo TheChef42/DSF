@@ -8,7 +8,7 @@ const transporter = require('../emailTransporter'); // Correctly import without 
 
 // Middleware to restrict access to authenticated users with admin privileges
 function isAuthenticated(req, res, next) {
-    if (req.session.user && req.session.role === 'admin') {
+    if (req.session.user && req.session.user.role === 'admin') {
         next();
     } else {
         res.redirect('/user/login');
@@ -122,14 +122,22 @@ async function sendInvitationEmail(to, name, token) {
 
 // Route to handle sending invitations
 router.post('/invite', isAuthenticated, async (req, res) => {
-    const { name, email, role } = req.body;
+    const { name, email, role, organisation_id } = req.body;
     const token = crypto.randomBytes(20).toString('hex'); // Generate a unique token
 
     try {
+        // Fetch the organisation_id from the database
+        console.log(organisation_id.split(' - ')[1])
+        const [rows] = await db.query('SELECT id FROM organisations WHERE university = ?', [organisation_id.split(' - ')[1]]);
+        if (rows.length === 0) {
+            throw new Error('Organisation not found');
+        }
+        const orgId = rows[0].id;
+
         // Insert the new user with signup_status set to 'pending'
         await db.query(
-            'INSERT INTO users (name, email, role, signup_status, invitation_token) VALUES (?, ?, ?, ?, ?)',
-            [name, email, role, 'pending', token]
+            'INSERT INTO users (name, email, role, signup_status, invitation_token, organisation_id) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, email, role, 'pending', token, orgId]
         );
 
         // Send the invitation email

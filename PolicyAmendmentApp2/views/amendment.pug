@@ -9,12 +9,12 @@ block content
     if success
       p.success-message(style="color: green;")= success
 
-    h1 Submit a #{selectedPaper}
+    h1 Submit an amendment for the #{selectedPaper}
 
     div.container.paper
       each paper in papers
         a(href="/amendment/" + paper.name)
-          button.large(class=paper.name === selectedPaper ? 'active' : '') #{paper.name}
+          button.large(class=paper.name == selectedPaper ? 'active' : '') #{paper.name}
 
     form(action="/submit-amendment" method="POST")
       label(for="æfNummer") ÆF Nummer:
@@ -83,15 +83,14 @@ block content
         th Motivation for ÆF
       each amendment in amendments
         tr
-          td= amendment.æfNummer
-          td= amendment.æfTilÆfNummer
-          td= amendment.modstridendeMed
-          td= amendment.linjeFra
-          td= amendment.linjeTil
-          td= amendment.indskrivning
-          td= amendment.stiller
-          td= amendment.medstillere
-          td= amendment.typeAfÆf
-          td= amendment.oprindeligTekst
-          td= amendment.nyTekst
-          td= amendment.motivationForÆf
+          td= amendment.amendment_number
+          td= amendment.write_in
+          td= amendment.conflicting_with
+          td= amendment.line_from
+          td= amendment.line_to
+          td= amendment.proposer
+          td= amendment.co_proposer
+          td= amendment.amendment_type
+          td= amendment.original_text_danish
+          td= amendment.new_text_danish
+          td= amendment.motivation_danish

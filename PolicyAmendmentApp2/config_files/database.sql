@@ -45,15 +45,22 @@ CREATE TABLE `amendments` (
   `user_id` int NOT NULL,
   `organisation_id` int NOT NULL,
   `paper_id` int NOT NULL,
-  `amendment_number` varchar(50) NOT NULL,
-  `amendment_reference` varchar(255) DEFAULT NULL,
+  `amendment_number` varchar(50) DEFAULT NULL,
+  `write_in` varchar(255) DEFAULT NULL,
   `conflicting_with` varchar(255) DEFAULT NULL,
+  `proposer` varchar(255) DEFAULT NULL,
+  `co_proposer` varchar(255) DEFAULT NULL,
   `line_from` int DEFAULT NULL,
   `line_to` int DEFAULT NULL,
+  `line_length` int DEFAULT NULL,
   `amendment_type` varchar(255) DEFAULT NULL,
-  `original_text` text,
-  `new_text` text,
-  `motivation` text,
+  `original_text_danish` text,
+  `new_text_danish` text,
+  `motivation_danish` text,
+  `original_text_english` text,
+  `new_text_english` text,
+  `motivation_english` text,
+  `notes_comments` text,
   `status` ENUM('working', 'submitted') DEFAULT 'working',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -93,4 +100,4 @@ INSERT INTO `papers` (`id`, `name`, `content`) VALUES
 
 -- Insert default admin user with hashed password
 INSERT INTO `users` (`email`, `name`, `password`, `role`, `signup_status`, `organisation_id`)
-VALUES ('admin@example.com', 'ADMIN', '$2b$10$N9qo8uLOickgx2ZMRZo5i.eW5ZQ1x1c1U1z1u1z1u1z1u1z1u1z1u', 'admin', 'completed', NULL);
+VALUES ('admin@example.com', 'ADMIN', '$2a$10$Jzmp475CQn1taPNdk0HJEeEXeM8xhNBxWAM/OPsMISA1C3y3e573G', 'admin', 'completed', '1');

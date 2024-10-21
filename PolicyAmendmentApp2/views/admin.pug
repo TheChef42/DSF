@@ -37,9 +37,9 @@ block content
             input(type="text" name="name" required)
 
             label(for="organisation") Organisation:
-            select(name="organisation" required)
+            select(name="organisation_id" required)
                 each organisation in organisations
-                    option(value=organisation.abbreviation) #{organisation.name} - #{organisation.university}
+                    option(value=organisation.id) #{organisation.name} - #{organisation.university}
 
             label(for="email") Email:
             input(type="email" name="email" required)
