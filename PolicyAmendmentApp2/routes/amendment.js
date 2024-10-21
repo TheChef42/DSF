@@ -30,7 +30,7 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
             [paperId, organisationId, 'working']
         );
         const [allPapers] = await db.query('SELECT id, name FROM papers');
-        req.session.selectedPaper = paperId;
+        req.session.selectedPaper = req.params.paper;
         res.render('amendment', { amendments, papers: allPapers, selectedPaper: paperName, role });
     } catch (err) {
         console.error(err);
