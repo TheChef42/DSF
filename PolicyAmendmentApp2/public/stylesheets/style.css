@@ -250,3 +250,32 @@ ul li {
     background-color: #357ABD;
 }
 
+/* Custom styles for Select2 */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #357ABD !important; /* Blue background for selected options */
+    border: 1px solid #357ABD !important; /* Blue border for selected options */
+    color: white !important; /* White text for selected options */
+    padding: 2px 7px !important; /* Increased padding for selected options */
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: white !important; /* White text for remove icon */
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #357ABD !important; /* Blue background for highlighted options */
+    color: white !important; /* White text for highlighted options */
+}
+
+/* Ensure default text color is not red */
+.select2-container--default .select2-results__option {
+    color: black !important; /* Default text color for options */
+}
+
+/* Ensure selected boxes have blue background and white text */
+.select2-container--default .select2-selection--multiple .select2-selection__choice[aria-selected="true"] {
+    background-color: #357ABD !important; /* Blue background for selected boxes */
+    color: white !important; /* White text for selected boxes */
+    padding: 5px 10px !important; /* Increased padding for selected boxes */
+}
+
