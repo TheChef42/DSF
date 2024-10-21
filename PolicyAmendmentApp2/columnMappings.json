@@ -1,0 +1,18 @@
+{
+  "amendment_number": ["ÆF nummer", "AM number", "ændringsnummer"],
+  "write_in": ["Til indskrivning", "For write-in", "til_indskrivning", "Indskrivning"],
+  "conflicting_with": ["I modstrid med", "Contradicting with", "modstridende_med", "Modstridende med"],
+  "proposer": ["Stiller", "Proposer", "stiller"],
+  "co_proposer": ["Medstiller(e)", "Co-proposer(s)", "medstiller", "Medstillere"],
+  "line_from": ["Linje fra", "Line (start)", "linje_fra", "Linje fra"],
+  "line_to": ["Linje til", "Line (end)", "linje_til", "Linje til"],
+  "line_length": ["Line_length", "linje_længde"],
+  "amendment_type": ["ÆF type", "AM type", "ændringstype", "Type af ÆF"],
+  "original_text_danish": ["Oprindelig tekst (dansk)", "Original text (Danish)", "oprindelig_tekst_dansk", "Oprindelig tekst"],
+  "new_text_danish": ["Ny tekst (dansk)", "New text (Danish)", "ny_tekst_dansk", "Ny tekst"],
+  "motivation_danish": ["Motivation for ÆF (dansk)", "Motivation for AM (Danish)", "motivation_dansk", "Motivation for ÆF"],
+  "original_text_english": ["Oprindelig tekst (engelsk)", "Original text (English)", "oprindelig_tekst_engelsk"],
+  "new_text_english": ["Ny tekst (engelsk)", "New text (English)", "ny_tekst_engelsk"],
+  "motivation_english": ["Motivation for ÆF (engelsk)", "Motivation for AM (English)", "motivation_engelsk"],
+  "notes_comments": ["Evt. note eller kommentar til dit ÆF", "Any notes comments for your AM", "noter_kommentarer"]
+}

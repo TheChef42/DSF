@@ -11,7 +11,7 @@ function replaceNull(value) {
 router.post('/', async (req, res) => {
     try {
         // Loop through each amendment in the global array
-        for (const amendment of global.storedAmendments) {
+        for (const amendment of req.session.storedAmendments) {
             if (!req.session.userId) {
                 console.error('User ID is missing for amendment:', amendment);
                 continue; // Skip this amendment if user_id is not defined
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         }
 
         // Clear the in-memory amendments list after saving
-        global.storedAmendments.length = 0;
+        req.session.storedAmendments.length = 0;
 
         // Redirect to confirmation page
         res.redirect('/confirmation');
