@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../db'); // Import the database connection
 
-// Route to handle individual amendment submissions
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const amendment = {
         æfNummer: req.body.æfNummer,
         æfTilÆfNummer: req.body.æfTilÆfNummer,
@@ -15,11 +15,20 @@ router.post('/', (req, res) => {
         typeAfÆf: req.body.typeAfÆf,
         oprindeligTekst: req.body.oprindeligTekst,
         nyTekst: req.body.nyTekst,
-        motivationForÆf: req.body.motivationForÆf
+        motivationForÆf: req.body.motivationForÆf,
+        user_id: req.session.user.id,
+        organisation_id: req.session.user.organisation_id,
+        paper_id: req.session.selectedPaper,
+        status: 'working'
     };
 
-    global.storedAmendments.push(amendment);
-    res.redirect('amendment');
+    try {
+        await db.query('INSERT INTO amendments SET ?', amendment);
+        res.redirect(`/amendment/${req.session.selectedPaper}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 module.exports = router;
