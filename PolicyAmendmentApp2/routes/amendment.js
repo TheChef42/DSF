@@ -30,8 +30,33 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
             [paperId, organisationId, 'working']
         );
         const [allPapers] = await db.query('SELECT id, name FROM papers');
+        const [organisations] = await db.query('SELECT name, abbreviation, university FROM organisations');
+        organisations.pop(); // Removes the last element (DSF) from the array
+
+        // Retrieve the abbreviation of the user's organization
+        const [orgResult] = await db.query('SELECT abbreviation FROM organisations WHERE id = ?', [organisationId]);
+        const proposer = orgResult[0].abbreviation;
+        req.session.user.organisation_abbreviation = proposer;
+
         req.session.selectedPaper = req.params.paper;
-        res.render('amendment', { amendments, papers: allPapers, selectedPaper: paperName, role });
+        res.render('amendment', { amendments, papers: allPapers, selectedPaper: paperName, role, organisations, proposer });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// DELETE /amendment/:id - Authenticated route to delete an amendment
+router.delete('/:id', isAuthenticated, async (req, res) => {
+    const amendmentId = req.params.id;
+    const organisationId = req.session.user.organisation_id;
+
+    try {
+        const result = await db.query('DELETE FROM amendments WHERE id = ? AND organisation_id = ?', [amendmentId, organisationId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).send('Amendment not found or not authorized to delete');
+        }
+        res.status(200).send('Amendment deleted successfully');
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

@@ -90,7 +90,8 @@ INSERT INTO `organisations` (`id`, `name`, `abbreviation`, `university`) VALUES
 (17, 'De Studerendes Råd', 'DKDK', 'Det Kgl. Danske Kunstakademi'),
 (18, 'De Arkitektstuderendes Råd', 'DAR', 'Arkitektskolen i Aarhus'),
 (19, 'De Studerendes Råd', 'RMC', 'Rytmisk Musikkonservatorium'),
-(20, 'De Studerendes Råd', 'DSK', 'Designskolen Kolding');
+(20, 'De Studerendes Råd', 'DSK', 'Designskolen Kolding'),
+(21, 'Danske Studerendes Fællesråd', 'DSF', 'DSF');
 
 -- Insert data into papers table
 INSERT INTO `papers` (`id`, `name`, `content`) VALUES
@@ -100,4 +101,4 @@ INSERT INTO `papers` (`id`, `name`, `content`) VALUES
 
 -- Insert default admin user with hashed password
 INSERT INTO `users` (`email`, `name`, `password`, `role`, `signup_status`, `organisation_id`)
-VALUES ('admin@example.com', 'ADMIN', '$2a$10$Jzmp475CQn1taPNdk0HJEeEXeM8xhNBxWAM/OPsMISA1C3y3e573G', 'admin', 'completed', '1');
+VALUES ('admin@example.com', 'ADMIN', '$2a$10$Jzmp475CQn1taPNdk0HJEeEXeM8xhNBxWAM/OPsMISA1C3y3e573G', 'admin', 'completed', '21');
