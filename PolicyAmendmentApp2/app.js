@@ -7,9 +7,7 @@ const https = require('https');
 const app = express();
 const nodemailer = require('nodemailer');
 const config = require('./config'); // Import the configuration
-
-// Remove global storedAmendments array
-// global.storedAmendments = []; // Not needed anymore
+const db = require('./db'); // Import the database connection
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -27,9 +25,37 @@ app.use(session({
 }));
 
 // Middleware to initialize storedAmendments in session if not present
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     if (!req.session.storedAmendments) {
-        req.session.storedAmendments = []; // Initialize an array for each session
+        try {
+            const [papers] = await db.query('SELECT name FROM papers');
+            req.session.storedAmendments = {};
+            papers.forEach(paper => {
+                req.session.storedAmendments[paper.name] = [];
+            });
+        } catch (err) {
+            return next(err);
+        }
+    }
+    next();
+});
+
+app.use(async (req, res, next) => {
+    if (!req.session.organisations) {
+        try {
+            const [organisations] = await db.query('SELECT id, name FROM organisations');
+            req.session.organisations = organisations;
+        } catch (err) {
+            return next(err);
+        }
+    }
+    next();
+});
+
+// Middleware to initialize selectedPaper in session if not present
+app.use((req, res, next) => {
+    if (!req.session.selectedPaper) {
+        req.session.selectedPaper = null;
     }
     next();
 });
@@ -39,14 +65,24 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
 // Middleware for checking authentication
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
-        next(); // User is authenticated, proceed
+        res.locals.user = req.session.user; // Make user info available to templates
+        res.locals.role = req.session.user.role; // Make role available to templates
+        next();
     } else {
-        res.redirect('/user/login'); // Redirect to login if not authenticated
+        res.redirect('/user/login');
     }
 }
+
+// Route to set the selected paper
+app.post('/select-paper', (req, res) => {
+    req.session.selectedPaper = req.body.selectedPaper;
+    res.redirect('/home'); // Redirect to home or any other page after setting the paper
+});
 
 // Import routes
 const mainRoute = require('./routes/main');

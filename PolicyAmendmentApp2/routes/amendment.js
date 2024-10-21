@@ -12,11 +12,23 @@ function isAuthenticated(req, res, next) {
 }
 
 // GET /amendment/:paper - Authenticated route to view amendments for a specific paper
-router.get('/:papers', isAuthenticated, async (req, res) => {
+router.get('/:paper', isAuthenticated, async (req, res) => {
     const role = req.session.role;
-    const paper = req.params.papers;
-    const [papers] = await db.query('SELECT id, name FROM papers');
-    res.render('amendment', {amendments: req.session.storedAmendments, papers, selectedPaper: paper, role: role});
+    const paperId = req.params.paper;
+    const organisationId = req.session.user.organisation_id;
+
+    try {
+        const [amendments] = await db.query(
+            'SELECT * FROM amendments WHERE paper_id = ? AND organisation_id = ? AND status = ?',
+            [paperId, organisationId, 'working']
+        );
+        const [papers] = await db.query('SELECT id, name FROM papers');
+        req.session.selectedPaper = paperId;
+        res.render('amendment', { amendments, papers, selectedPaper: paperId, role });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 module.exports = router;

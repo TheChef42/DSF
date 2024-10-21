@@ -4,17 +4,6 @@ const { check, validationResult } = require('express-validator');
 const db = require('../db'); // Import the db connection
 const router = express.Router();
 
-// Middleware to restrict access to authenticated users
-function isAuthenticated(req, res, next) {
-    if (req.session.user) {
-        res.locals.user = req.session.user; // Make user info available to templates
-        res.locals.role = req.session.role; // Make role available to templates
-        next();
-    } else {
-        res.redirect('/user/login');
-    }
-}
-
 // GET /register/:token - Registration page with token
 router.get('/register/:token', async (req, res) => {
     const token = req.params.token;
@@ -109,9 +98,13 @@ router.post('/login', async (req, res) => {
             if (await bcrypt.compare(password, user.password)) {
                 console.log("Password correct, logging in.");
                 // Store user details in session
-                req.session.user = user.name; // Set user name in session
-                req.session.userId = user.id; // Store the user ID for later use
-                req.session.role = user.role; // Store the user role
+                req.session.user = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    organisation_id: user.organisation_id
+                };
                 res.redirect('/home');
             } else {
                 console.log("Incorrect password.");

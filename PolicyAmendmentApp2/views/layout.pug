@@ -7,11 +7,11 @@ html
         // Role-based buttons
         if user
             div.user-info-container
-                span.user-name Welcome, #{user}
+                span.user-name Welcome, #{user.name}
                 a.logout-button(href="/user/logout") Logout
 
-        if role === 'admin'
-            div.admin-panel-button-container
-                button.admin-panel-button(onclick="window.location.href='/admin'") Admin Panel
+            if user.role === 'admin'
+                div.admin-panel-button-container
+                    button.admin-panel-button(onclick="window.location.href='/admin'") Admin Panel
 
         block content

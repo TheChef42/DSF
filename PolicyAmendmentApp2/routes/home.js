@@ -11,12 +11,12 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-// GET /amendment - Authenticated route to view amendments from the database
-// In routes/amendment.js
+// GET /home - Authenticated route to view papers
 router.get('/', isAuthenticated, async (req, res) => {
     const role = req.session.role;
     const [papers] = await db.query('SELECT id, name FROM papers');
-    res.render('paperSelection', {role: role, papers});
+    res.render('paperSelection', { role, papers });
 });
+
 
 module.exports = router;
