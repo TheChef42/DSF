@@ -38,4 +38,52 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
     }
 });
 
+// POST /submit-amendment - Handle form submission
+router.post('/submit-amendment', isAuthenticated, async (req, res) => {
+    const {
+        æfNummer,
+        æfTilÆfNummer,
+        linjeFra,
+        linjeTil,
+        stiller,
+        medstillere,
+        typeAfÆf,
+        oprindeligTekst,
+        nyTekst,
+        motivationForÆf
+    } = req.body;
+
+    const userId = req.session.user.id;
+    const organisationId = req.session.user.organisation_id;
+    const paperId = req.session.selectedPaperId; // Assuming you store the selected paper ID in the session
+
+    try {
+        // Insert the amendment into the database
+        await db.query(
+            'INSERT INTO amendments (user_id, organisation_id, paper_id, amendment_number, write_in, conflicting_with, line_from, line_to, proposer, co_proposer, amendment_type, original_text_danish, new_text_danish, motivation_danish, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [userId, organisationId, paperId, æfNummer, æfTilÆfNummer, null, linjeFra, linjeTil, stiller, medstillere, typeAfÆf, oprindeligTekst, nyTekst, motivationForÆf, 'working']
+        );
+
+        res.redirect('/amendment/' + req.session.selectedPaper); // Redirect to the amendments page for the selected paper
+    } catch (error) {
+        console.error('Error submitting amendment:', error);
+        res.status(500).send('Error submitting amendment');
+    }
+});
+
+// DELETE /amendment/:id - Delete a specific amendment
+router.delete('/:id', isAuthenticated, async (req, res) => {
+    const amendmentId = req.params.id;
+
+    try {
+        await db.query('DELETE FROM amendments WHERE id = ?', [amendmentId]);
+        res.status(200).send('Amendment deleted successfully');
+    } catch (error) {
+        console.error('Error deleting amendment:', error);
+        res.status(500).send('Error deleting amendment');
+    }
+});
+
+
+
 module.exports = router;

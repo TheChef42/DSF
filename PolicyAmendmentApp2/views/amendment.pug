@@ -80,6 +80,7 @@ block content
         th Oprindelig tekst
         th Ny tekst
         th Motivation for ÆF
+        th Actions
       each amendment in amendments
         tr
           td= amendment.amendment_number
@@ -93,3 +94,28 @@ block content
           td= amendment.original_text_danish
           td= amendment.new_text_danish
           td= amendment.motivation_danish
+          td
+            button(type="button" style="background-color: red; color: white;" onclick=`deleteAmendment(${amendment.id})`) Delete
+
+    script.
+      function deleteAmendment(id) {
+        if (confirm('Are you sure you want to delete this amendment?')) {
+          fetch(`/amendment/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+                  .then(response => {
+                    if (response.ok) {
+                      location.reload();
+                    } else {
+                      alert('Error deleting amendment');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting amendment');
+                  });
+        }
+      }
