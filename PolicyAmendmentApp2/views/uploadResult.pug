@@ -1,0 +1,54 @@
+extends layout
+
+block content
+    h1 Upload Result
+
+    if errors.length > 0
+        h2.error-title Errors in upload
+        table
+            thead
+                tr
+                    th Row
+                    th Error Messages
+            tbody
+                each error in errors
+                    tr
+                        td= error.row
+                        td
+                            each errorMessage in error.errors
+                                p.error-message= errorMessage
+
+    if amendments.length > 0
+        h2 Succesfull Amendments
+        table
+            thead
+                tr
+                    th ÆF Nummer
+                    th Indskrivning
+                    th Modstridende med
+                    th Linje fra
+                    th Linje til
+                    th Stiller
+                    th Medstiller
+                    th Type af ÆF
+                    th Oprindelig tekst
+                    th Ny tekst
+                    th Motivation for ÆF
+                    th Actions
+                each amendment in amendments
+                    tr
+                        td= amendment.amendment_number
+                        td= amendment.write_in
+                        td= amendment.conflicting_with
+                        td= amendment.line_from
+                        td= amendment.line_to
+                        td= amendment.proposer
+                        td= amendment.co_proposer
+                        td= amendment.amendment_type
+                        td= amendment.original_text_danish
+                        td= amendment.new_text_danish
+                        td= amendment.motivation_danish
+
+    // Button to go back to the paper page
+    div.paper-page-button-container
+        button.paper-page-button(onclick=`window.location.href='/amendment/${selectedPaper}'`) Back to Paper Page

@@ -24,12 +24,10 @@ router.post('/', async (req, res) => {
 
             const worksheet = workbook.getWorksheet(1);
             const amendments = [];
+            const errors = [];
 
             // Get the header row
             const headerRow = worksheet.getRow(1).values;
-
-            // Log the header row to check its contents
-            console.log('Header Row:', headerRow);
 
             // Create a mapping of header names to column indices
             const headerMap = {};
@@ -38,42 +36,61 @@ router.post('/', async (req, res) => {
                     const normalizedHeader = header.trim().toLowerCase();
                     for (const [key, values] of Object.entries(columnMappings)) {
                         if (values.map(v => v.toLowerCase()).includes(normalizedHeader)) {
-                            headerMap[key] = index;
+                            headerMap[key] = { index, name: header };
                         }
                     }
                 }
             });
-
-            // Log the headerMap to check if it is populated correctly
-            console.log('Header Map:', headerMap);
 
             worksheet.eachRow((row, rowNumber) => {
                 if (rowNumber > 1 && row.hasValues) {
-                    console.log(`Processing row ${rowNumber}`);
                     const amendment = {};
-                    for (const [key, index] of Object.entries(headerMap)) {
+                    const rowErrors = [];
+
+                    for (const [key, { index, name }] of Object.entries(headerMap)) {
                         const cell = row.getCell(index);
                         if (cell) {
-                            amendment[key] = cell.value || "";
-                        } else {
-                            console.log(`Row ${rowNumber} does not have a cell at index ${index}`);
+                            let value = cell.value || "";
+                            // Split the value before the occurrence of a number
+                            if (key === 'amendment_number') {
+                                const match = value.match(/\d+/);
+                                value = match ? match[0] : value;
+                                console.log(value);
+                            }
+                            // Add validation checks for each field
+                            if (key === 'amendment_number' && isNaN(value)) {
+                                rowErrors.push(`Invalid amendment number "${value}" in column "${name}". Expected a number.`);
+                            }
+                            if (key === 'line_from' && isNaN(value)) {
+                                rowErrors.push(`Invalid line from "${value}" in column "${name}". Expected a number.`);
+                            }
+                            if (key === 'line_to' && isNaN(value)) {
+                                rowErrors.push(`Invalid line to "${value}" in column "${name}". Expected a number.`);
+                            }
+                            // Add more validation checks as needed
+                            amendment[key] = value;
                         }
                     }
-                    amendment.user_id = userId;
-                    amendment.organisation_id = organisationId;
-                    amendment.paper_id = paperId; // Use the retrieved paper_id
-                    amendment.status = 'working';
-                    console.log(`Amendment object for row ${rowNumber}:`, amendment); // Print the amendment object
-                    amendments.push(amendment);
-                } else {
-                    console.log(`Skipping row ${rowNumber} as it has no values`);
+
+                    if (rowErrors.length > 0) {
+                        errors.push({ row: rowNumber, errors: rowErrors });
+                    } else {
+                        amendment.user_id = userId;
+                        amendment.organisation_id = organisationId;
+                        amendment.paper_id = paperId; // Use the retrieved paper_id
+                        amendment.status = 'working';
+                        amendments.push(amendment);
+                    }
                 }
             });
 
+            // Log and insert only valid amendments
             for (const amendment of amendments) {
+                console.log('Inserting amendment:', amendment); // Log the amendment being inserted
                 await db.query('INSERT INTO amendments SET ?', amendment);
             }
-            res.redirect('/amendment/' + selectedPaper);
+
+            res.render('uploadResult', { errors, amendments, selectedPaper });
         } catch (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');

@@ -7,4 +7,4 @@ block content
     div.container.paperCenter
         each paper in papers
             a(href="/amendment/" + paper.name)
-                button.large(class=paper.name === selectedPaper ? 'active' : '') #{paper.name}
+                button.large(type="button" class=paper.name === selectedPaper ? 'active' : '') #{paper.name}
