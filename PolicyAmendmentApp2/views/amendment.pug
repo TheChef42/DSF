@@ -3,10 +3,13 @@ extends layout
 block content
   head
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css")
+    style.
+      .clear-both {
+        clear: both;
+      }
   body
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js")
-
 
     if error
       p.error-message(style="color: red;")= error
@@ -78,15 +81,16 @@ block content
         button(type="button") Download English Template
 
     // Form to send amendments to server folder
-    h1 Send Amendments to Server
+    h1 Submitted Amendments
     form(action="/send-amendments" method="POST" class="send-amendments-form")
-      button(type="submit") Send Amendments
+      button(type="submit" style="margin-right: 10px;") Submit Amendments
+      button(type="button" class="button" onclick="window.location.href='/submitted-amendments'") Go to Submitted Amendments
 
-    h1 View Submitted Amendments
-    div.button-container
-      a.button(href="/submitted-amendments") Go to Submitted Amendments
+    // Clear float to prevent overlap
+    div.clear-both
 
     h1 Amendments List
+    button(type="button" style="background-color: red; color: white; margin-bottom: 10px;" onclick="deleteAllAmendments()") Delete All
     table
       tr
         th ÆF Nummer
@@ -116,6 +120,7 @@ block content
           td= amendment.motivation_danish
           td
             button(type="button" style="background-color: red; color: white;" onclick=`deleteAmendment(${amendment.id})`) Delete
+
     // Modal for file validation alert
     div#overlay(style="display: none;")
       div#fileErrorModal.modal
@@ -151,7 +156,7 @@ block content
 
       function deleteAmendment(id) {
         if (confirm('Are you sure you want to delete this amendment?')) {
-          fetch(`/amendment/${id}`, {
+          fetch(`/amendment/delete/${id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
@@ -189,3 +194,24 @@ block content
         document.getElementById('overlay').style.display = 'none';
       }
 
+      function deleteAllAmendments() {
+        if (confirm('Are you sure you want to delete all visible amendments?')) {
+          fetch('/amendment/delete-all', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+                  .then(response => {
+                    if (response.ok) {
+                      location.reload();
+                    } else {
+                      alert('Error deleting amendments');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting amendments');
+                  });
+        }
+      }

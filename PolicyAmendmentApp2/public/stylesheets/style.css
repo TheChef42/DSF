@@ -194,7 +194,7 @@ button:hover {
     left: 5%;
     width: min-content;
     justify-content: space-around;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
 
 .paperCenter {
@@ -374,3 +374,10 @@ ul li {
     color: #000;
 }
 
+.error-message {
+    color: var(--danger-color);
+}
+
+.error-title {
+    color: var(--danger-color);
+}
