@@ -177,6 +177,12 @@ button.active {
     color: var(--primary-color);
 }
 
+button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+    color: white;
+}
+
 .large {
     font-size: large;
 }
