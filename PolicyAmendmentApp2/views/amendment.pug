@@ -7,6 +7,7 @@ block content
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js")
 
+
     if error
       p.error-message(style="color: red;")= error
 
@@ -68,8 +69,8 @@ block content
       button(type="submit") Submit Amendment
 
     h1 Upload Amendments via Excel
-    form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form")
-      input(type="file" name="file" accept=".xls,.xlsx" required)
+    form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form" onsubmit="return validateFile()")
+      input(type="file" name="file" id="fileInput" accept=".xls,.xlsx" required)
       button(type="submit" style="margin-right: 10px;") Upload
       a(href="/download-template/danish" style="margin-right: 10px;")
         button(type="button") Download Danish Template
@@ -115,6 +116,18 @@ block content
           td= amendment.motivation_danish
           td
             button(type="button" style="background-color: red; color: white;" onclick=`deleteAmendment(${amendment.id})`) Delete
+    // Modal for file validation alert
+    div#overlay(style="display: none;")
+      div#fileErrorModal.modal
+        div.modal-content
+          span.close-button(onclick="closeModal()") &times;
+          h2.modal-title Error: Invalid File
+          p Please upload a valid .xls or .xlsx file.
+          div.modal-buttons
+            a(href="/download-template/danish" target="_blank")
+              button(type="button") Download Danish Template
+            a(href="/download-template/english" target="_blank")
+              button(type="button") Download English Template
 
     script.
       $(document).ready(function () {
@@ -157,3 +170,22 @@ block content
                   });
         }
       }
+      function validateFile() {
+        const fileInput = document.getElementById('fileInput');
+        const filePath = fileInput.value;
+        const allowedExtensions = /(\.xls|\.xlsx)$/i;
+
+        if (!allowedExtensions.exec(filePath)) {
+          // Show the custom modal popup and overlay
+          document.getElementById('overlay').style.display = 'flex';
+          fileInput.value = ''; // Reset the file input
+          return false;
+        }
+        return true;
+      }
+
+      function closeModal() {
+        // Hide the custom modal and overlay
+        document.getElementById('overlay').style.display = 'none';
+      }
+
