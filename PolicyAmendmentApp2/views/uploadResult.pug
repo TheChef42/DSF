@@ -4,6 +4,18 @@ block content
     h1 Upload Result
 
     if errors.length > 0
+        h2 Errors
+        ul
+            each error in errors
+                li Row #{error.row}: #{error.errors.join(', ')}
+
+    if unmatchedHeaders.length > 0
+        h2 Unused or Unmatched Headers
+        ul
+            each header in unmatchedHeaders
+                li #{header}
+
+    if errors.length > 0
         h2.error-title Errors in upload
         table
             thead

@@ -25,6 +25,7 @@ router.post('/', async (req, res) => {
             const worksheet = workbook.getWorksheet(1);
             const amendments = [];
             const errors = [];
+            const unmatchedHeaders = [];
 
             // Get the header row
             const headerRow = worksheet.getRow(1).values;
@@ -34,10 +35,16 @@ router.post('/', async (req, res) => {
             headerRow.forEach((header, index) => {
                 if (header) {
                     const normalizedHeader = header.trim().toLowerCase();
+                    let matched = false;
                     for (const [key, values] of Object.entries(columnMappings)) {
                         if (values.map(v => v.toLowerCase()).includes(normalizedHeader)) {
                             headerMap[key] = { index, name: header };
+                            matched = true;
+                            break;
                         }
+                    }
+                    if (!matched) {
+                        unmatchedHeaders.push(header);
                     }
                 }
             });
@@ -90,7 +97,7 @@ router.post('/', async (req, res) => {
                 await db.query('INSERT INTO amendments SET ?', amendment);
             }
 
-            res.render('uploadResult', { errors, amendments, selectedPaper });
+            res.render('uploadResult', { errors, amendments, unmatchedHeaders, selectedPaper });
         } catch (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');
