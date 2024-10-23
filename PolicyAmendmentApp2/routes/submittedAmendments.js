@@ -4,7 +4,7 @@ const db = require('../db');
 
 router.get('/', async (req, res) => {
     try {
-        const [submittedAmendments] = await db.query('SELECT * FROM amendments');
+        const [submittedAmendments] = await db.query('SELECT * FROM amendments where status = ?', ['submitted']);
 
         // Log the retrieved data to the console
         console.log('Fetched submitted amendments:', submittedAmendments);
