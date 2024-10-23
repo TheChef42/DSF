@@ -25,6 +25,7 @@ router.post('/', async (req, res) => {
             const worksheet = workbook.getWorksheet(1);
             const amendments = [];
             const errors = [];
+            const unmatchedHeaders = [];
 
             // Get the header row
             const headerRow = worksheet.getRow(1).values;
@@ -34,13 +35,39 @@ router.post('/', async (req, res) => {
             headerRow.forEach((header, index) => {
                 if (header) {
                     const normalizedHeader = header.trim().toLowerCase();
+                    let matched = false;
                     for (const [key, values] of Object.entries(columnMappings)) {
                         if (values.map(v => v.toLowerCase()).includes(normalizedHeader)) {
                             headerMap[key] = { index, name: header };
+                            matched = true;
+                            break;
                         }
+                    }
+                    if (!matched) {
+                        unmatchedHeaders.push(header);
                     }
                 }
             });
+
+            // Check if at least three headers are matched
+            if (Object.keys(headerMap).length < 3) {
+                return res.render('uploadResult', {
+                    errors: [{ row: 'N/A', errors: ['Please download the template and ensure at least three headers are correct.'] }],
+                    amendments: [],
+                    unmatchedHeaders,
+                    selectedPaper
+                });
+            }
+
+            // Check if there are more than 150 rows
+            if (worksheet.rowCount > 151) { // 1 for header row + 150 data rows
+                return res.render('uploadResult', {
+                    errors: [{ row: 'N/A', errors: ['Maximum of 150 amendments upload at a time.'] }],
+                    amendments: [],
+                    unmatchedHeaders,
+                    selectedPaper
+                });
+            }
 
             worksheet.eachRow((row, rowNumber) => {
                 if (rowNumber > 1 && row.hasValues) {
@@ -52,20 +79,25 @@ router.post('/', async (req, res) => {
                         if (cell) {
                             let value = cell.value || "";
                             // Split the value before the occurrence of a number
-                            if (key === 'amendment_number') {
+                            if (key === 'amendment_number' && typeof value === 'string') {
                                 const match = value.match(/\d+/);
                                 value = match ? match[0] : value;
-                                console.log(value);
                             }
                             // Add validation checks for each field
-                            if (key === 'amendment_number' && isNaN(value)) {
+                            if (key === 'amendment_number' && (isNaN(value) || value === "")) {
                                 rowErrors.push(`Invalid amendment number "${value}" in column "${name}". Expected a number.`);
                             }
-                            if (key === 'line_from' && isNaN(value)) {
-                                rowErrors.push(`Invalid line from "${value}" in column "${name}". Expected a number.`);
+                            if (key === 'line_from' && (isNaN(value) || value === "")) {
+                                if (value === "")
+                                    rowErrors.push(`Invalid line_from "is empty" in column "${name}". Expected a number.`);
+                                else
+                                    rowErrors.push(`Invalid line_from "${value}" in column "${name}". Expected a number.`);
                             }
-                            if (key === 'line_to' && isNaN(value)) {
-                                rowErrors.push(`Invalid line to "${value}" in column "${name}". Expected a number.`);
+                            if (key === 'line_to' && (isNaN(value) || value === "")) {
+                                if (value === "")
+                                    rowErrors.push(`Invalid line_to "is empty" in column "${name}". Expected a number.`);
+                                else
+                                    rowErrors.push(`Invalid line_to "${value}" in column "${name}". Expected a number.`);
                             }
                             // Add more validation checks as needed
                             amendment[key] = value;
@@ -90,7 +122,7 @@ router.post('/', async (req, res) => {
                 await db.query('INSERT INTO amendments SET ?', amendment);
             }
 
-            res.render('uploadResult', { errors, amendments, selectedPaper });
+            res.render('uploadResult', { errors, amendments, unmatchedHeaders, selectedPaper });
         } catch (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');

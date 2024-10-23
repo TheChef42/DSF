@@ -3,6 +3,12 @@ extends layout
 block content
     h1 Upload Result
 
+    if unmatchedHeaders.length > 0
+        h2 Unused or Unmatched Headers
+        ul
+            each header in unmatchedHeaders
+                li #{header}
+
     if errors.length > 0
         h2.error-title Errors in upload
         table
@@ -10,13 +16,23 @@ block content
                 tr
                     th Row
                     th Error Messages
+                    if errors.length > 0 && errors[0].errors.includes('Please download the template and ensure at least three headers are correct.')
+                        th Download Template
             tbody
                 each error in errors
                     tr
                         td= error.row
                         td
                             each errorMessage in error.errors
-                                p.error-message= errorMessage
+                                p.error-message(style="text-align: left;")= errorMessage
+
+                        td
+                            if errors.length > 0 && errors[0].errors.includes('Please download the template and ensure at least three headers are correct.')
+                                div.download-template-buttons
+                                    a(href="/download-template/danish" style="margin-right: 10px;")
+                                        button(type="button") Download Danish Template
+                                    a(href="/download-template/english")
+                                        button(type="button") Download English Template
 
     if amendments.length > 0
         h2 Succesfull Amendments
