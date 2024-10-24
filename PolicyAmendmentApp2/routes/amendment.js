@@ -26,7 +26,8 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
         const paperId = papers[0].id;
 
         const [amendments] = await db.query(
-            'SELECT * FROM amendments WHERE paper_id = ? AND organisation_id = ? AND status = ?',
+            'SELECT * FROM amendments WHERE paper_id = ? AND organisation_id = ? AND status = ?' +
+            ' ORDER BY line_from ASC',
             [paperId, organisationId, 'working']
         );
         const [allPapers] = await db.query('SELECT id, name FROM papers');

@@ -103,9 +103,13 @@ router.post('/', async (req, res) => {
                                 else
                                     rowErrors.push(`Invalid line_to "${value}" in column "${name}". Expected a number.`);
                             }
-                            // Add more validation checks as needed
                             amendment[key] = value;
                         }
+                    }
+
+                    // Validate that line_from is smaller than line_to or line_to can be empty
+                    if (amendment.line_from && amendment.line_to && amendment.line_from > amendment.line_to) {
+                        rowErrors.push(`line_from "${amendment.line_from}" should be smaller than line_to "${amendment.line_to}".`);
                     }
 
                     if (rowErrors.length > 0) {

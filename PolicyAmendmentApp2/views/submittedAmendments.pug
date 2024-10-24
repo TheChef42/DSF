@@ -3,6 +3,13 @@ extends layout
 block content
     h1 Submitted Amendments for the #{selectedPaper}
 
+    // Buttons to download the Excel sheets
+    div.container
+        a(href="/exportExcel/danish/" + selectedPaper style="margin-right: 10px;")
+            button(type="button") Download Danish Excel
+        a(href="/exportExcel/english/" + selectedPaper)
+            button(type="button") Download English Excel
+
     div.container.paper
         each paper in papers
             a(href="/submitted-amendments/" + paper.name)
@@ -30,10 +37,6 @@ block content
                 td= amendment.original_text_danish || amendment.original_text_english
                 td= amendment.new_text_danish || amendment.new_text_english
                 td= amendment.motivation_danish || amendment.motivation_english
-
-    h2 Export Options
-    a.button(href="/export") Export All as Word Document
-    a.button(href="/export-excel") Export All as Excel Document
 
     h2 Submit New Amendment
     a.button(href="/Amendment/" + selectedPaper) Go Back to Submit New
