@@ -84,7 +84,7 @@ block content
     h1 Submitted Amendments
     form(action="/send-amendments" method="POST" class="send-amendments-form")
       button(type="submit" style="margin-right: 10px;") Submit Amendments
-      button(type="button" class="button" onclick="window.location.href='/submitted-amendments'") Go to Submitted Amendments
+      button(type="button" class="button" onclick=`window.location.href='/submitted-amendments/${selectedPaper}'`) Go to Submitted Amendments
 
     // Clear float to prevent overlap
     div.clear-both
