@@ -191,7 +191,7 @@ button:hover {
     position: fixed;
     display: flex;
     top: 35%;
-    left: 5%;
+    left: 1%;
     width: min-content;
     justify-content: space-around;
     flex-wrap: wrap;

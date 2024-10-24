@@ -8,28 +8,39 @@ block content
             th Name
             th Email
             th Role
+            th Organisation
             th Signup Status
             th Actions
         each user, index in users
-            tr
+            tr(id=`display-row-${index}`)
                 td= user.name
                 td= user.email
-                td
-                    div(roleContainerId=`role-container-${index}` class="role-container")
-                        // Display the current role by default
-                        span(id=`role-span-${index}` class="role-display")= user.role
-                        // Role edit form (hidden by default)
-                        form(action=`/admin/edit-role/${user.id}` method="POST" id=`edit-role-form-${index}` class="form-inline role-edit-form" style="display:none; margin:0;")
-                            select(name="role" required)
-                                option(value="admin" selected=user.role === 'admin') Admin
-                                option(value="redaktionsMedlem" selected=user.role === 'redaktionsMedlem') Redaktions Medlem
-                                option(value="medlemsOrganisation" selected=user.role === 'medlemsOrganisation') Medlems Organisation
-                            button(type="submit" class="button-save") Save
+                td= user.role
+                td= `${user.organisation_name} - ${user.organisation_university}`
                 td= user.signup_status
                 td.actions
-                    button(type="button" class="button-edit" onclick=`toggleEditRole(${index})`) Edit
+                    button(type="button" class="button-edit" onclick=`toggleEditUser(${index})`) Edit
                     a.button-delete(href=`/admin/delete/${user.id}` onclick="return confirmDelete()") Delete
-
+            tr(id=`edit-row-${index}` style="display:none;")
+                form(action=`/admin/edit-user/${user.id}` method="POST" id=`edit-user-form-${index}` class="form-inline user-edit-form" style="margin:0;")
+                    td
+                        input(type="text" name="name" value=user.name required)
+                    td
+                        input(type="email" name="email" value=user.email required)
+                    td
+                        select(name="role" required)
+                            option(value="admin" selected=user.role === 'admin') Admin
+                            option(value="redaktionsMedlem" selected=user.role === 'redaktionsMedlem') Redaktions Medlem
+                            option(value="medlemsOrganisation" selected=user.role === 'medlemsOrganisation') Medlems Organisation
+                    td
+                        select(name="organisation_id" required)
+                            each organisation in organisations
+                                option(value=organisation.id selected=user.organisation_id === organisation.id) #{organisation.name} - #{organisation.university}
+                    td
+                        input(type="text" name="signup_status" value=user.signup_status readonly)
+                    td.actions
+                        button(type="submit" class="button-save") Save
+                        button(type="button" class="button-cancel" onclick=`toggleEditUser(${index})`) Cancel
 
     h2 Send Invitation
         form(action="/admin/invite" method="POST" class="form-container")
@@ -57,17 +68,15 @@ block content
             return confirm('Are you sure you want to delete this user?');
         }
 
-        function toggleEditRole(index) {
-            const roleSpan = document.getElementById(`role-span-${index}`);
-            const editForm = document.getElementById(`edit-role-form-${index}`);
+        function toggleEditUser(index) {
+            const editRow = document.getElementById(`edit-row-${index}`);
+            const displayRow = document.getElementById(`display-row-${index}`);
 
-            if (editForm.style.display === "none") {
-                // Hide the current role text and show the edit form
-                roleSpan.style.display = "none";
-                editForm.style.display = "inline-flex";
+            if (editRow.style.display === "none") {
+                editRow.style.display = "table-row";
+                displayRow.style.display = "none";
             } else {
-                // Show the current role text and hide the edit form
-                roleSpan.style.display = "inline";
-                editForm.style.display = "none";
+                editRow.style.display = "none";
+                displayRow.style.display = "table-row";
             }
         }

@@ -3,6 +3,11 @@ extends layout
 block content
     h1 Submitted Amendments for the #{selectedPaper}
 
+    div.container.paper
+        each paper in papers
+            a(href="/submitted-amendments/" + paper.name)
+                button.large(class=paper.name == selectedPaper ? 'active' : '') #{paper.name}
+
     table
         tr
             th ÆF Nummer

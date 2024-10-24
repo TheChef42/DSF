@@ -17,11 +17,11 @@ block content
         else
             input(type="text" name="name" value=name required)
 
-        label(for="organisation") Name:
+        label(for="organisation") Organisation:
         if isInvited
-            input(type="text" name="organisation" value=name readonly)
+            input(type="text" name="organisation" value=organisation readonly)
         else
-            input(type="text" name="organisation" value=name required)
+            input(type="text" name="organisation" value=organisation required)
 
         label(for="email") Email:
         if isInvited
