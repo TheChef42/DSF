@@ -8,7 +8,19 @@ router.post('/', async (req, res) => {
     if (req.files && req.files.file) {
         const file = req.files.file;
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(file.data);
+
+        // Load the workbook and handle errors
+        try {
+            await workbook.xlsx.load(file.data);
+        } catch (err) {
+            console.error('Error loading workbook:', err);
+            return res.render('uploadResult', {
+                errors: [{ row: 'N/A', errors: ['Unexpected error occurred while loading the workbook.'] }],
+                amendments: [],
+                unmatchedHeaders: [],
+                selectedPaper: req.session.selectedPaper
+            });
+        }
 
         const selectedPaper = req.session.selectedPaper;
         const userId = req.session.user.id;
@@ -22,7 +34,12 @@ router.post('/', async (req, res) => {
             }
             const paperId = papers[0].id;
 
+            // Ensure the worksheet exists
             const worksheet = workbook.getWorksheet(1);
+            if (!worksheet) {
+                return res.status(400).send('Worksheet not found');
+            }
+
             const amendments = [];
             const errors = [];
             const unmatchedHeaders = [];
@@ -73,10 +90,7 @@ router.post('/', async (req, res) => {
                                 const match = value.match(/\d+/);
                                 value = match ? match[0] : value;
                             }
-                            /* Add validation checks for each field
-                            if (key === 'amendment_number' && (isNaN(value) || value === "")) {
-                                rowErrors.push(`Invalid amendment number "${value}" in column "${name}". Expected a number.`);
-                            }*/
+                            // Add validation checks for each field
                             if (key === 'line_from' && (isNaN(value) || value === "")) {
                                 if (value === "")
                                     rowErrors.push(`Invalid line_from "is empty" in column "${name}". Expected a number.`);
@@ -125,7 +139,12 @@ router.post('/', async (req, res) => {
             res.render('uploadResult', { errors, amendments, unmatchedHeaders, selectedPaper });
         } catch (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.render('uploadResult', {
+                errors: [{ row: 'N/A', errors: ['Unexpected error occurred while processing the file.'] }],
+                amendments: [],
+                unmatchedHeaders,
+                selectedPaper
+            });
         }
     } else {
         res.status(400).send('No file uploaded');
