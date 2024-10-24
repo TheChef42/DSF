@@ -17,7 +17,12 @@ router.get('/register/:token', async (req, res) => {
 
         // Get the user details to prefill the form
         const user = users[0];
-        res.render('register', { token, email: user.email, name: user.name, isInvited: true });
+
+        // Fetch the organization details
+        const [organisations] = await db.query('SELECT name FROM organisations WHERE id = ?', [user.organisation_id]);
+        const organisation = organisations.length > 0 ? organisations[0].name : '';
+
+        res.render('register', { token, email: user.email, name: user.name, organisation, isInvited: true });
     } catch (error) {
         console.error('Error fetching user for registration:', error);
         res.status(500).send('Error fetching user for registration');
