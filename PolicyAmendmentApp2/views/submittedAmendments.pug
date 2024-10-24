@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    h1 Submitted Amendments
+    h1 Submitted Amendments for the #{selectedPaper}
 
     table
         tr
@@ -31,4 +31,4 @@ block content
     a.button(href="/export-excel") Export All as Excel Document
 
     h2 Submit New Amendment
-    a.button(href="/home") Go Back to Submit New
+    a.button(href="/Amendment/" + selectedPaper) Go Back to Submit New

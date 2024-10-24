@@ -11,7 +11,7 @@ router.get('/:paper', async (req, res) => {
         // Log the retrieved data to the console
         console.log('Fetched submitted amendments:', submittedAmendments);
 
-        res.render('submittedAmendments', { submittedAmendments });
+        res.render('submittedAmendments', { submittedAmendments, selectedPaper: paperName });
     } catch (error) {
         console.error('Error fetching submitted amendments:', error);
         res.status(500).send('Error loading submitted amendments');
