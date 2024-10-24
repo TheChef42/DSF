@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    h1 Paper Management
+
+    table
+        tr
+            th Paper Name
+            th Current State
+            th New State
+            th Active
+            th Actions
+        each paper in papers
+            tr
+                td= paper.name
+                td= paper.state
+                td
+                    form(action="/paper-management/update" method="POST")
+                        input(type="hidden" name="paperId" value=paper.id)
+                        select(name="state")
+                            option(value="æf" selected=paper.state === 'æf') æf
+                            option(value="æf til æf" selected=paper.state === 'æf til æf') æf til æf
+                        select(name="active")
+                            option(value="1" selected=paper.active === 1) Åben for ÆF
+                            option(value="0" selected=paper.active === 0) Lukket for ÆF
+                        button(type="submit") Update
+    a(href="/home") Back to home

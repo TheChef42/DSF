@@ -6,7 +6,6 @@ block content
     style.
       .clear-both {
         clear: both;
-      }
   body
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js")
@@ -18,121 +17,119 @@ block content
       p.success-message(style="color: green;")= success
 
     h1 Submit an amendment for the #{selectedPaper}
-
     div.container.paper
       each paper in papers
         a(href="/amendment/" + paper.name)
           button.large(class=paper.name == selectedPaper ? 'active' : '') #{paper.name}
 
-    form(action="/submit-amendment" method="POST")
-      label(for="æfNummer") ÆF Nummer:
-      input(type="text" name="æfNummer" required)
+    if isClosed
+      p The amendment process for the paper "#{selectedPaper}" is currently closed.
+      img(src="/lukketforæf.png" alt="Closed for ÆF")
+    else
 
-      label(for="æfTilÆfNummer") ÆF til ÆF Nummer:
-      input(type="text" name="æfTilÆfNummer" required)
+      form(action="/submit-amendment" method="POST")
+        label(for="stiller") Stiller:
+        input(type="text" name="stiller" value=proposer readonly)
 
-      label(for="linjeFra") Linje fra:
-      input(type="number" name="linjeFra")
+        label(for="linjeFra") Line From:
+        input(type="number" name="linjeFra" required)
 
-      label(for="linjeTil") Linje til:
-      input(type="number" name="linjeTil")
+        label(for="linjeTil") Line To:
+        input(type="number" name="linjeTil" required)
 
-      label(for="stiller") Stiller:
-      input(type="text" name="stiller" value=proposer readonly)
+        if mode === 'æf til æf'
+          label(for="aef_to_aef") What AM should this AM to AM modify?:
+          input(type="text" name="aef_to_aef" required)
 
-      label(for="medstillere") Medstillere:
-      select(name="medstillere[]" multiple="multiple" class="select2" required)
-        each org in organisations
-          option(value=org.abbreviation)= org.name + ' - ' + org.university + ' (' + org.abbreviation + ')'
+        label(for="medstillere") Medstillere:
+        select(name="medstillere[]" multiple="multiple" class="select2")
+          each org in organisations
+            option(value=org.abbreviation)= org.name + ' - ' + org.university + ' (' + org.abbreviation + ')'
 
-      label(for="typeAfÆf") Type af ÆF:
-      select(name="typeAfÆf" required)
-        option(value="tilføj") Tilføj
-        option(value="erstat") Erstat
-        option(value="slet") Slet
+        label(for="typeAfÆf") Type af ÆF:
+        select(name="typeAfÆf" required)
+          option(value="Tilføj / Add") Tilføj / Add
+          option(value="Erstat / Replace") Erstat / Replace
+          option(value="Slet / Delete") Slet / Delete
+          option(value="Flyt / Move") Flyt / Move
 
-      label(for="oprindeligTekst") Oprindelig tekst:
-      textarea(name="oprindeligTekst")
+        label(for="oprindeligTekst") Oprindelig tekst:
+        textarea(name="oprindeligTekst")
 
-      label(for="nyTekst") Ny tekst:
-      textarea(name="nyTekst")
+        label(for="nyTekst") Ny tekst:
+        textarea(name="nyTekst")
 
-      label(for="motivationForÆf") Motivation for ÆF:
-      textarea(name="motivationForÆf")
+        label(for="motivationForÆf") Motivation for ÆF:
+        textarea(name="motivationForÆf" required)
 
-      label(for="oprindeligTekstEngelsk") Oprindelig tekst (engelsk):
-      textarea(name="oprindeligTekstEngelsk")
+        label(for="oprindeligTekstEngelsk") Oprindelig tekst (engelsk):
+        textarea(name="oprindeligTekstEngelsk")
 
-      label(for="nyTekstEngelsk") Ny tekst (engelsk):
-      textarea(name="nyTekstEngelsk")
+        label(for="nyTekstEngelsk") Ny tekst (engelsk):
+        textarea(name="nyTekstEngelsk")
 
-      label(for="motivationForÆfEngelsk") Motivation for ÆF (engelsk):
-      textarea(name="motivationForÆfEngelsk")
+        label(for="motivationForÆfEngelsk") Motivation for ÆF (engelsk):
+        textarea(name="motivationForÆfEngelsk")
 
-      button(type="submit") Submit Amendment
+        button(type="submit") Submit Amendment
 
-    h1 Upload Amendments via Excel
-    form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form" onsubmit="return validateFile()")
-      input(type="file" name="file" id="fileInput" accept=".xls,.xlsx" required)
-      button(type="submit" style="margin-right: 10px;") Upload
-      a(href="/download-template/danish" style="margin-right: 10px;")
-        button(type="button") Download Danish Template
-      a(href="/download-template/english")
-        button(type="button") Download English Template
+      h1 Upload Amendments via Excel
+      form(action="/upload" method="POST" enctype="multipart/form-data" class="upload-form" onsubmit="return validateFile()")
+        input(type="file" name="file" id="fileInput" accept=".xls,.xlsx" required)
+        button(type="submit" style="margin-right: 10px;") Upload
+        a(href="/download-template/danish" style="margin-right: 10px;")
+          button(type="button") Download Danish Template
+        a(href="/download-template/english")
+          button(type="button") Download English Template
 
-    // Form to send amendments to server folder
-    h1 Submitted Amendments
-    form(action="/send-amendments" method="POST" class="send-amendments-form")
-      button(type="submit" style="margin-right: 10px;") Submit Amendments
-      button(type="button" class="button" onclick=`window.location.href='/submitted-amendments/${selectedPaper}'`) Go to Submitted Amendments
+      h1 Submitted Amendments
+      form(action="/send-amendments" method="POST" class="send-amendments-form")
+        button(type="submit" style="margin-right: 10px;") Submit Amendments
+        button(type="button" class="button" onclick=`window.location.href='/submitted-amendments/${selectedPaper}'`) Go to Submitted Amendments
 
-    // Clear float to prevent overlap
-    div.clear-both
+      div.clear-both
 
-    h1 Amendments List
-    button(type="button" style="background-color: red; color: white; margin-bottom: 10px;" onclick="deleteAllAmendments()") Delete All
-    table
-      tr
-        th ÆF Nummer
-        th Indskrivning
-        th Modstridende med
-        th Linje fra
-        th Linje til
-        th Stiller
-        th Medstiller
-        th Type af ÆF
-        th Oprindelig tekst
-        th Ny tekst
-        th Motivation for ÆF
-        th Actions
-      each amendment in amendments
+      h1 Amendments List
+      button(type="button" style="background-color: red; color: white; margin-bottom: 10px;" onclick="deleteAllAmendments()") Delete All
+      table
         tr
-          td= amendment.amendment_number
-          td= amendment.write_in
-          td= amendment.conflicting_with
-          td= amendment.line_from
-          td= amendment.line_to
-          td= amendment.proposer
-          td= amendment.co_proposer
-          td= amendment.amendment_type
-          td= amendment.original_text_danish
-          td= amendment.new_text_danish
-          td= amendment.motivation_danish
-          td
-            button(type="button" style="background-color: red; color: white;" onclick=`deleteAmendment(${amendment.id})`) Delete
+          th ÆF Nummer
+          if mode === 'æf til æf'
+            th ÆF to ÆF
+          th Linje fra
+          th Linje til
+          th Stiller
+          th Medstiller
+          th Type af ÆF
+          th Oprindelig tekst
+          th Ny tekst
+          th Motivation for ÆF
+          th Actions
+        each amendment in amendments
+          tr
+            td= amendment.amendment_number
+            if mode === 'æf til æf'
+              td= amendment.amendment_to_amendment
+            td= amendment.line_from
+            td= amendment.line_to
+            td= amendment.proposer
+            td= amendment.co_proposer
+            td= amendment.amendment_type
+            td= amendment.original_text_danish
+            td= amendment.new_text_danish
+            td= amendment.motivation_danish
+            td
+              button(type="button" onclick=`deleteAmendment(${amendment.id})`) Delete
 
-    // Modal for file validation alert
-    div#overlay(style="display: none;")
-      div#fileErrorModal.modal
-        div.modal-content
-          span.close-button(onclick="closeModal()") &times;
-          h2.modal-title Error: Invalid File
-          p Please upload a valid .xls or .xlsx file.
-          div.modal-buttons
-            a(href="/download-template/danish" target="_blank")
-              button(type="button") Download Danish Template
-            a(href="/download-template/english" target="_blank")
-              button(type="button") Download English Template
+      div#overlay(style="display: none;")
+        div#fileErrorModal.modal
+          div.modal-content
+            div.modal-header
+              h2 File Validation Error
+            div.modal-body
+              p The selected file is not a valid Excel file. Please upload a .xls or .xlsx file.
+            div.modal-buttons
+              button(type="button" onclick="closeModal()") Close
 
     script.
       $(document).ready(function () {
@@ -175,22 +172,21 @@ block content
                   });
         }
       }
+
       function validateFile() {
         const fileInput = document.getElementById('fileInput');
         const filePath = fileInput.value;
         const allowedExtensions = /(\.xls|\.xlsx)$/i;
 
         if (!allowedExtensions.exec(filePath)) {
-          // Show the custom modal popup and overlay
           document.getElementById('overlay').style.display = 'flex';
-          fileInput.value = ''; // Reset the file input
+          fileInput.value = '';
           return false;
         }
         return true;
       }
 
       function closeModal() {
-        // Hide the custom modal and overlay
         document.getElementById('overlay').style.display = 'none';
       }
 

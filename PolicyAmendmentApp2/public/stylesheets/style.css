@@ -7,12 +7,33 @@
     --background-color: #f4f4f9;
     --text-color: #333;
     --highlight-color: #81C6E1;
-    --font-family: Arial, sans-serif;
+}
+
+/* Font definitions */
+@font-face {
+    font-family: 'Archer';
+    src: url('/public/stylesheets/fonts/Archer-Book-Pro.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Archer';
+    src: url('/public/stylesheets/fonts/Archer-Bold-Pro.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Knockout';
+    src: url('/public/stylesheets/fonts/Knockout-HTF46-Flyweight.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* General body and headings */
 body {
-    font-family: var(--font-family);
+    font-family: 'Archer', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
@@ -22,7 +43,16 @@ body {
     align-items: center;
 }
 
-h1, h2 {
+h1 {
+    font-family: 'Knockout', sans-serif;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: 'Archer', sans-serif;
+    font-weight: bold;
     color: var(--primary-color);
     margin-bottom: 20px;
     text-align: center;
@@ -380,4 +410,54 @@ ul li {
 
 .error-title {
     color: var(--danger-color);
+}
+
+/* Slider Checkbox */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50; /* Green when active */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+input:not(:checked) + .slider {
+    background-color: #ccc; /* Grey when inactive */
 }

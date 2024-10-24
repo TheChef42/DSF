@@ -18,16 +18,17 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
     const organisationId = req.session.user.organisation_id;
 
     try {
-        // Look up the paper ID based on the paper name
-        const [papers] = await db.query('SELECT id FROM papers WHERE name = ?', [paperName]);
+        // Look up the paper ID and mode based on the paper name
+        const [papers] = await db.query('SELECT id, state, active FROM papers WHERE name = ?', [paperName]);
         if (papers.length === 0) {
             return res.status(404).send('Paper not found');
         }
         const paperId = papers[0].id;
+        const mode = papers[0].state;
+        const isClosed = papers[0].active === 0;
 
         const [amendments] = await db.query(
-            'SELECT * FROM amendments WHERE paper_id = ? AND organisation_id = ? AND status = ?' +
-            ' ORDER BY line_from ASC',
+            'SELECT * FROM amendments WHERE paper_id = ? AND organisation_id = ? AND status = ? ORDER BY line_from ASC',
             [paperId, organisationId, 'working']
         );
         const [allPapers] = await db.query('SELECT id, name FROM papers');
@@ -40,7 +41,7 @@ router.get('/:paper', isAuthenticated, async (req, res) => {
         req.session.user.organisation_abbreviation = proposer;
 
         req.session.selectedPaper = req.params.paper;
-        res.render('amendment', { amendments, papers: allPapers, selectedPaper: paperName, role, organisations, proposer });
+        res.render('amendment', { amendments, papers: allPapers, selectedPaper: paperName, role, organisations, proposer, mode, isClosed });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
