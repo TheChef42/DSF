@@ -113,7 +113,7 @@ app.use('/submit-amendment', isAuthenticated, submitRoute);
 app.use('/upload', isAuthenticated, uploadRoute);
 app.use('/export', isAuthenticated, downloadRoute);
 app.use('/send-amendments', isAuthenticated, sendAmendmentsRoute);
-app.use('/export-excel', isAuthenticated, exportExcelRoute);
+app.use('/exportExcel', isAuthenticated, exportExcelRoute);
 app.use('/confirmation', isAuthenticated, confirmationRoute);
 app.use('/submitted-amendments', isAuthenticated, submittedAmendmentsRoute);
 app.use('/admin', isAuthenticated, adminRouter);

@@ -1,8 +1,12 @@
 const express = require('express');
 const ExcelJS = require('exceljs');
+const path = require('path');
 const router = express.Router();
 const db = require('../db'); // Import the database connection
 const columnMappings = require('../columnMappings.json');
+
+
+
 
 const createWorkbook = async (language, organisationAbbreviation, db) => {
     const workbook = new ExcelJS.Workbook();
@@ -94,21 +98,25 @@ const createWorkbook = async (language, organisationAbbreviation, db) => {
 };
 
 // Route to download the Danish template
-router.get('/danish', async (req, res) => {
-    const organisationAbbreviation = req.session.user.organisation_abbreviation; // Get the organisation abbreviation from the session
-    const workbook = await createWorkbook('danish', organisationAbbreviation, db);
-    res.setHeader('Content-Disposition', 'attachment; filename=template_danish.xlsx');
-    await workbook.xlsx.write(res);
-    res.end();
+router.get('/danish', (req, res) => {
+    const filePath = path.join(__dirname, '../templates/template_danish.xlsx');
+    res.download(filePath, 'template_danish.xlsx', (err) => {
+        if (err) {
+            console.error('Error downloading Danish template:', err);
+            res.status(500).send('Error downloading Danish template');
+        }
+    });
 });
 
 // Route to download the English template
-router.get('/english', async (req, res) => {
-    const organisationAbbreviation = req.session.user.organisation_abbreviation; // Get the organisation abbreviation from the session
-    const workbook = await createWorkbook('english', organisationAbbreviation, db);
-    res.setHeader('Content-Disposition', 'attachment; filename=template_english.xlsx');
-    await workbook.xlsx.write(res);
-    res.end();
+router.get('/english', (req, res) => {
+    const filePath = path.join(__dirname, '../templates/template_english.xlsx');
+    res.download(filePath, 'template_english.xlsx', (err) => {
+        if (err) {
+            console.error('Error downloading English template:', err);
+            res.status(500).send('Error downloading English template');
+        }
+    });
 });
 
 module.exports = router;

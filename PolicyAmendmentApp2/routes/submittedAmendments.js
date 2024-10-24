@@ -19,13 +19,15 @@ router.get('/:paper', async (req, res) => {
         if (userRole === 'redaktionsMedlem') {
             // If the user is 'redaktionsMedlem', fetch all submitted amendments for the selected paper
             [submittedAmendments] = await db.query(
-                'SELECT * FROM amendments WHERE status = ? AND paper_id = ?',
+                'SELECT * FROM amendments WHERE status = ? AND paper_id = ?' +
+                ' ORDER BY line_from ASC',
                 ['submitted', paper[0].id]
             );
         } else {
             // If the user is not 'redaktionsMedlem', fetch only the submitted amendments of the current organisation
             [submittedAmendments] = await db.query(
-                'SELECT * FROM amendments WHERE status = ? AND paper_id = ? AND organisation_id = ?',
+                'SELECT * FROM amendments WHERE status = ? AND paper_id = ? AND organisation_id = ?' +
+                ' ORDER BY line_from ASC',
                 ['submitted', paper[0].id, organisationId]
             );
         }
