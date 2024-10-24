@@ -59,16 +59,6 @@ router.post('/', async (req, res) => {
                 });
             }
 
-            // Check if there are more than 150 rows
-            if (worksheet.rowCount > 151) { // 1 for header row + 150 data rows
-                return res.render('uploadResult', {
-                    errors: [{ row: 'N/A', errors: ['Maximum of 150 amendments upload at a time.'] }],
-                    amendments: [],
-                    unmatchedHeaders,
-                    selectedPaper
-                });
-            }
-
             worksheet.eachRow((row, rowNumber) => {
                 if (rowNumber > 1 && row.hasValues) {
                     const amendment = {};
@@ -115,6 +105,16 @@ router.post('/', async (req, res) => {
                     }
                 }
             });
+
+            // Check if there are more than 150 valid rows
+            if (amendments.length > 150) {
+                return res.render('uploadResult', {
+                    errors: [{ row: 'N/A', errors: ['Maximum of 150 amendments upload at a time.'] }],
+                    amendments: [],
+                    unmatchedHeaders,
+                    selectedPaper
+                });
+            }
 
             // Log and insert only valid amendments
             for (const amendment of amendments) {
