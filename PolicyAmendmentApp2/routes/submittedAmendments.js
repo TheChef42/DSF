@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-router.get('/', async (req, res) => {
+router.get('/:paper', async (req, res) => {
     try {
-        const [submittedAmendments] = await db.query('SELECT * FROM amendments where status = ?', ['submitted']);
+        const paperName = req.params.paper;
+        const [papers] = await db.query('SELECT id FROM papers WHERE name = ?', [paperName]);
+        const [submittedAmendments] = await db.query('SELECT * FROM amendments where status = ? AND paper_id = ?', ['submitted', papers]);
 
         // Log the retrieved data to the console
         console.log('Fetched submitted amendments:', submittedAmendments);
