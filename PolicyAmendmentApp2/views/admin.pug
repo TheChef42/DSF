@@ -21,6 +21,7 @@ block content
                 td.actions
                     button(type="button" class="button-edit" onclick=`toggleEditUser(${index})`) Edit
                     a.button-delete(href=`/admin/delete/${user.id}` onclick="return confirmDelete()") Delete
+                    button(type="button" class="button-reset" onclick=`resetPassword(${user.id})`) Reset Password
             tr(id=`edit-row-${index}` style="display:none;")
                 form(action=`/admin/edit-user/${user.id}` method="POST" id=`edit-user-form-${index}` class="form-inline user-edit-form" style="margin:0;")
                     td
@@ -78,5 +79,15 @@ block content
             } else {
                 editRow.style.display = "none";
                 displayRow.style.display = "table-row";
+            }
+        }
+
+        function resetPassword(userId) {
+            if (confirm('Are you sure you want to reset the password for this user?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/reset-password/${userId}`;
+                document.body.appendChild(form);
+                form.submit();
             }
         }

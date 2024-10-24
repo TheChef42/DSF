@@ -42,10 +42,10 @@ router.post('/register', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('register', { errors: errors.array(), token: req.body.token, email: req.body.email, name: req.body.name, role: req.body.role, isInvited: req.body.token ? true : false });
+        return res.render('register', { errors: errors.array(), token: req.body.token, email: req.body.email, name: req.body.name, role: req.body.role, organisation_id: req.body.organisation_id, isInvited: req.body.token ? true : false });
     }
 
-    const { name, password, token, role, email } = req.body;
+    const { name, password, token, role, email, organisation_id } = req.body;
 
     try {
         if (token) {
@@ -63,21 +63,30 @@ router.post('/register', [
         } else {
             // No token, create a new user
             const hashedPassword = await bcrypt.hash(password, 10);
-            await db.query('INSERT INTO users (name, email, password, role, signup_status) VALUES (?, ?, ?, ?, "completed")', [name, email, hashedPassword, role]);
+            await db.query('INSERT INTO users (name, email, password, role, signup_status, organisation_id) VALUES (?, ?, ?, ?, "completed", ?)', [name, email, hashedPassword, role, organisation_id]);
         }
 
         res.redirect('/user/login'); // Redirect to login after successful registration
     } catch (error) {
         console.error('Error registering user:', error);
-        res.render('register', { errors: [{ msg: error.sqlMessage }], token, email, name, role, isInvited: token ? true : false });
+        res.render('register', { errors: [{ msg: error.sqlMessage }], token, email, name, role, organisation_id, isInvited: token ? true : false });
     }
 });
 
-
 // Registration Route - GET
-router.get('/register', (req, res) => {
+router.get('/flyudvalget', async (req, res) => {
     console.log("Accessed registration page.");
-    res.render('register');
+    try {
+        const [organisations] = await db.query('SELECT id, name, abbreviation, university FROM organisations');
+        const formattedOrganisations = organisations.map(org => ({
+            id: org.id,
+            display: `${org.name} - ${org.university} (${org.abbreviation})`
+        }));
+        res.render('register', { organisations: formattedOrganisations, isInvited: false });
+    } catch (error) {
+        console.error('Error fetching organisations:', error);
+        res.status(500).send('Error fetching organisations');
+    }
 });
 
 // Login Route - GET

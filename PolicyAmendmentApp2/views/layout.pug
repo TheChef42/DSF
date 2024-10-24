@@ -18,4 +18,8 @@ html
                 div.admin-panel-button-container
                     button.admin-panel-button(onclick="window.location.href='/admin'") Admin Panel
 
+            if user.role === 'redaktionsMedlem'
+                div.admin-panel-button-container
+                    button.admin-panel-button(onclick="window.location.href='/paper-management'") Paper Management Panel
+
         block content

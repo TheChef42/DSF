@@ -24,6 +24,7 @@ router.post('/', async (req, res) => {
 
         const amendment = {
             amendment_number: req.body['æfNummer'],
+            amendment_to_amendment: req.body['aef_to_aef'],
             line_from: req.body['linjeFra'],
             line_to: req.body['linjeTil'],
             write_in: req.body['stiller'],
@@ -41,6 +42,10 @@ router.post('/', async (req, res) => {
             paper_id: paperId, // Use the retrieved paper_id
             status: 'working'
         };
+
+        console.log(
+            'Amendment to be inserted:', amendment
+        )
 
         await db.query('INSERT INTO amendments SET ?', amendment);
         res.redirect(`/amendment/${selectedPaperName}`);

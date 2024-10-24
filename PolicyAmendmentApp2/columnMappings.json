@@ -1,5 +1,6 @@
 {
   "amendment_number": ["ÆF nummer", "AM number", "ændringsnummer"],
+  "amendment_to_amendment": ["ÆF til ÆF", "AM to AM", "ændring_til_ændring", "ÆF til ÆF"],
   "write_in": ["Til indskrivning", "For write-in", "til_indskrivning", "Indskrivning"],
   "conflicting_with": ["I modstrid med", "Contradicting with", "modstridende_med", "Modstridende med"],
   "proposer": ["Stiller", "Proposer", "stiller"],

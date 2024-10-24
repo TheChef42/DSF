@@ -35,7 +35,8 @@ CREATE TABLE `users` (
 CREATE TABLE `papers` (
     `id` int NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL UNIQUE,
-    `content` mediumtext DEFAULT NULL,
+    `state` enum('æf', 'æf til æf') DEFAULT NULL,
+    `active` tinyint(1) DEFAULT 1,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -46,6 +47,7 @@ CREATE TABLE `amendments` (
   `organisation_id` int NOT NULL,
   `paper_id` int NOT NULL,
   `amendment_number` varchar(50) DEFAULT NULL,
+  `amendment_to_amendment` varchar(50) DEFAULT NULL,
   `write_in` varchar(255) DEFAULT NULL,
   `conflicting_with` varchar(255) DEFAULT NULL,
   `proposer` varchar(255) DEFAULT NULL,
@@ -62,6 +64,7 @@ CREATE TABLE `amendments` (
   `motivation_english` text,
   `notes_comments` text,
   `status` ENUM('working', 'submitted') DEFAULT 'working',
+  `submitted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
@@ -94,10 +97,10 @@ INSERT INTO `organisations` (`id`, `name`, `abbreviation`, `university`) VALUES
 (21, 'Danske Studerendes Fællesråd', 'DSF', 'DSF');
 
 -- Insert data into papers table
-INSERT INTO `papers` (`id`, `name`, `content`) VALUES
-(1, 'Arbejdsplan 2025', 'ikke noget'),
-(2, 'Politikpapir om optag og adgang', 'ikke noget'),
-(3, 'Politikpapir om digitalisering', 'ikke noget');
+INSERT INTO `papers` (`id`, `name`, `state`) VALUES
+(1, 'Arbejdsplan 2025', 'æf'),
+(2, 'Politikpapir om optag og adgang', 'æf'),
+(3, 'Politikpapir om digitalisering', 'æf');
 
 -- Insert default admin user with hashed password
 INSERT INTO `users` (`email`, `name`, `password`, `role`, `signup_status`, `organisation_id`)

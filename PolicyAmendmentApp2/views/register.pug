@@ -21,7 +21,9 @@ block content
         if isInvited
             input(type="text" name="organisation" value=organisation readonly)
         else
-            input(type="text" name="organisation" value=organisation required)
+            select(name="organisation_id" required)
+                each organisation in organisations
+                    option(value=organisation.id)= organisation.display
 
         label(for="email") Email:
         if isInvited

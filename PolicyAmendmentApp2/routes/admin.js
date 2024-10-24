@@ -119,4 +119,27 @@ router.post('/invite', isAuthenticated, async (req, res) => {
     }
 });
 
+// Route to handle password reset
+router.post('/reset-password/:id', isAuthenticated, async (req, res) => {
+    const userId = req.params.id;
+    const token = crypto.randomBytes(20).toString('hex'); // Generate a unique token
+
+    try {
+        // Delete the user's password, set a new invite token, and update the signup status to 'pending'
+        await db.query('UPDATE users SET password = NULL, invitation_token = ?, signup_status = ? WHERE id = ?', [token, 'pending', userId]);
+
+        // Fetch the user's email and name
+        const [user] = await db.query('SELECT email, name FROM users WHERE id = ?', [userId]);
+        if (user.length > 0) {
+            // Send the invitation email
+            await sendInvitationEmail(user[0].email, user[0].name, token);
+        }
+
+        res.redirect('/admin'); // Redirect back to the admin panel after resetting the password
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).send('Error resetting password');
+    }
+});
+
 module.exports = router;

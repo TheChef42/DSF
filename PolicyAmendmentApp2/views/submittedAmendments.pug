@@ -19,7 +19,6 @@ block content
         tr
             th ÆF Nummer
             th ÆF til ÆF Nummer
-            th Modstridende med
             th Linje fra
             th Linje til
             th Type af ÆF
@@ -29,8 +28,7 @@ block content
         each amendment in submittedAmendments
             tr
                 td= amendment.amendment_number
-                td= amendment.amendment_reference
-                td= amendment.conflicting_with
+                td= amendment.amendment_to_amendment
                 td= amendment.line_from
                 td= amendment.line_to
                 td= amendment.amendment_type
