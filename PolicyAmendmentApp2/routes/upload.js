@@ -73,10 +73,10 @@ router.post('/', async (req, res) => {
                                 const match = value.match(/\d+/);
                                 value = match ? match[0] : value;
                             }
-                            // Add validation checks for each field
+                            /* Add validation checks for each field
                             if (key === 'amendment_number' && (isNaN(value) || value === "")) {
                                 rowErrors.push(`Invalid amendment number "${value}" in column "${name}". Expected a number.`);
-                            }
+                            }*/
                             if (key === 'line_from' && (isNaN(value) || value === "")) {
                                 if (value === "")
                                     rowErrors.push(`Invalid line_from "is empty" in column "${name}". Expected a number.`);
