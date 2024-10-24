@@ -15,7 +15,7 @@ router.get('/:language/:policyPaperName', async (req, res) => {
     const userRole = req.session.user.role; // Get the user role from the session
 
     try {
-        let query = 'SELECT * FROM amendments WHERE organisation_id = ? AND status = "submitted"';
+        let query = 'SELECT * FROM amendments WHERE organisation_id = ? AND status = "submitted" AND paper_id = (SELECT id FROM papers WHERE name = ?)';
         let queryParams = [organisationId];
 
         // If the user is a redaktionsMedlem, fetch all amendments for the selected paper
@@ -24,10 +24,20 @@ router.get('/:language/:policyPaperName', async (req, res) => {
             queryParams = [policyPaperName];
         }
 
+// If the state of the paper is æf to æf, only query amendments with a value in the amendment_to_amendment column
+        const [paperState] = await db.query('SELECT state FROM papers WHERE name = ?', [policyPaperName]);
+        console.log('Paper state:', paperState[0].state);
+        if (paperState[0].state === 'æf til æf') {
+            query += ' AND (amendment_to_amendment IS NOT NULL AND amendment_to_amendment != "")';
+            console.log('Paper state is æf to æf');
+        } else {
+            query += ' AND (amendment_to_amendment IS NULL OR amendment_to_amendment = "")';
+            console.log('Paper state is æf');
+        }
+
         // Fetch amendments from the database based on the organisation and status
         const [submittedAmendments] = await db.query(query, queryParams);
 
-        console.log('Fetched submitted amendments:', submittedAmendments);
 
         // Determine the template file based on the selected language
         const templateFile = language === 'danish' ? 'template_danish.xlsx' : 'template_english.xlsx';
@@ -66,7 +76,6 @@ router.get('/:language/:policyPaperName', async (req, res) => {
             row.commit(); // Commit the row to the worksheet
         });
 
-        console.log(`Total rows added: ${worksheet.rowCount - 1}`); // Log the total number of rows added
 
         // Set headers for download as an Excel file
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -74,7 +83,6 @@ router.get('/:language/:policyPaperName', async (req, res) => {
 
         // Write the workbook to the response
         await workbook.xlsx.write(res);
-        console.log(`Final row count in workbook: ${worksheet.rowCount - 1}`); // Log the final row count
         res.end();
     } catch (error) {
         console.error('Error generating Excel file:', error);

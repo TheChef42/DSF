@@ -27,15 +27,15 @@ block content
       img(src="/lukketforæf.png" alt="Closed for ÆF")
     else
 
-      form(action="/submit-amendment" method="POST")
+      form(action="/submit-amendment" method="POST" onsubmit="return validateForm()")
         label(for="stiller") Stiller:
         input(type="text" name="stiller" value=proposer readonly)
 
         label(for="linjeFra") Line From:
-        input(type="number" name="linjeFra" required)
+        input(type="number" name="linjeFra" id="linjeFra" required)
 
         label(for="linjeTil") Line To:
-        input(type="number" name="linjeTil" required)
+        input(type="number" name="linjeTil" id="linjeTil" required)
 
         if mode === 'æf til æf'
           label(for="aef_to_aef") What AM should this AM to AM modify?:
@@ -47,17 +47,18 @@ block content
             option(value=org.abbreviation)= org.name + ' - ' + org.university + ' (' + org.abbreviation + ')'
 
         label(for="typeAfÆf") Type af ÆF:
-        select(name="typeAfÆf" required)
+        select(name="typeAfÆf" id="typeAfÆf" required onchange="toggleNyTekstFields()")
           option(value="Tilføj / Add") Tilføj / Add
           option(value="Erstat / Replace") Erstat / Replace
           option(value="Slet / Delete") Slet / Delete
           option(value="Flyt / Move") Flyt / Move
 
         label(for="oprindeligTekst") Oprindelig tekst:
-        textarea(name="oprindeligTekst")
+        textarea(name="oprindeligTekst" required)
 
-        label(for="nyTekst") Ny tekst:
-        textarea(name="nyTekst")
+        div#nyTekstFields
+          label(for="nyTekst") Ny tekst:
+          textarea(name="nyTekst")
 
         label(for="motivationForÆf") Motivation for ÆF:
         textarea(name="motivationForÆf" required)
@@ -65,8 +66,9 @@ block content
         label(for="oprindeligTekstEngelsk") Oprindelig tekst (engelsk):
         textarea(name="oprindeligTekstEngelsk")
 
-        label(for="nyTekstEngelsk") Ny tekst (engelsk):
-        textarea(name="nyTekstEngelsk")
+        div#nyTekstFieldsEng
+          label(for="nyTekstEngelsk") Ny tekst (engelsk):
+          textarea(name="nyTekstEngelsk")
 
         label(for="motivationForÆfEngelsk") Motivation for ÆF (engelsk):
         textarea(name="motivationForÆfEngelsk")
@@ -119,17 +121,19 @@ block content
             td= amendment.new_text_danish
             td= amendment.motivation_danish
             td
-              button(type="button" onclick=`deleteAmendment(${amendment.id})`) Delete
+              button(type="button" style="background-color: red; color: white; margin-bottom: 10px;" onclick=`deleteAmendment(${amendment.id})`) Delete
 
-      div#overlay(style="display: none;")
-        div#fileErrorModal.modal
-          div.modal-content
-            div.modal-header
-              h2 File Validation Error
-            div.modal-body
-              p The selected file is not a valid Excel file. Please upload a .xls or .xlsx file.
-            div.modal-buttons
-              button(type="button" onclick="closeModal()") Close
+          div#overlay(style="display: none;")
+            div#fileErrorModal.modal
+              div.modal-content
+                span.close-button(onclick="closeModal()") &times;
+                h2.modal-title Error: Invalid File
+                p Please upload a valid .xls or .xlsx file.
+                div.modal-buttons
+                  a(href="/download-template/danish" target="_blank")
+                    button(type="button") Download danish Template
+                  a(href="/download-template/english" target="_blank")
+                    button(type="button") Download English Template
 
     script.
       $(document).ready(function () {
@@ -211,3 +215,31 @@ block content
                   });
         }
       }
+
+      function validateForm() {
+        const linjeFra = document.getElementById('linjeFra').value;
+        const linjeTil = document.getElementById('linjeTil').value;
+
+        if (parseInt(linjeFra) >= parseInt(linjeTil)) {
+          alert('Line From must be smaller than Line To');
+          return false;
+        }
+        return true;
+      }
+
+      function toggleNyTekstFields() {
+        const typeAfÆf = document.getElementById('typeAfÆf').value;
+        const nyTekstFields = document.getElementById('nyTekstFields');
+        const nyTekstFieldsEng = document.getElementById('nyTekstFieldsEng');
+
+        if (typeAfÆf === 'Slet / Delete') {
+          nyTekstFields.style.display = 'none';
+          nyTekstFieldsEng.style.display = 'none';
+        } else {
+          nyTekstFields.style.display = 'block';
+          nyTekstFieldsEng.style.display = 'block';
+        }
+      }
+
+      // Initial call to set the correct visibility on page load
+      toggleNyTekstFields();
