@@ -40,6 +40,7 @@ block content
             thead
                 tr
                     th ÆF Nummer
+                    th ÆF til ÆF
                     th Indskrivning
                     th Modstridende med
                     th Linje fra
@@ -54,6 +55,7 @@ block content
                 each amendment in amendments
                     tr
                         td= amendment.amendment_number
+                        td= amendment.amendment_to_amendment
                         td= amendment.write_in
                         td= amendment.conflicting_with
                         td= amendment.line_from
