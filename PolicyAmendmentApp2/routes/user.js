@@ -19,8 +19,8 @@ router.get('/register/:token', async (req, res) => {
         const user = users[0];
 
         // Fetch the organization details
-        const [organisations] = await db.query('SELECT name FROM organisations WHERE id = ?', [user.organisation_id]);
-        const organisation = organisations.length > 0 ? organisations[0].name : '';
+        const [organisations] = await db.query('SELECT name, university FROM organisations WHERE id = ?', [user.organisation_id]);
+        const organisation = organisations.length > 0 ? `${organisations[0].name} - ${organisations[0].university}` : '';
 
         res.render('register', { token, email: user.email, name: user.name, organisation, isInvited: true });
     } catch (error) {
