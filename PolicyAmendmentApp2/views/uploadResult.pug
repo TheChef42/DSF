@@ -16,7 +16,7 @@ block content
                 tr
                     th Row
                     th Error Messages
-                    if errors.length > 0 && errors[0].errors.includes('Please download the template and ensure at least three headers are correct.')
+                    if errors.some(error => error.errors.includes('Please download the template and ensure at least three headers are correct.') || error.errors.includes('Unexpected error occurred while loading the workbook.') || error.errors.includes('Unexpected error occurred while processing the file.'))
                         th Download Template
             tbody
                 each error in errors
@@ -26,8 +26,8 @@ block content
                             each errorMessage in error.errors
                                 p.error-message(style="text-align: left;")= errorMessage
 
-                        td
-                            if errors.length > 0 && errors[0].errors.includes('Please download the template and ensure at least three headers are correct.')
+                        if error.errors.includes('Please download the template and ensure at least three headers are correct.') || error.errors.includes('Unexpected error occurred while loading the workbook.') || error.errors.includes('Unexpected error occurred while processing the file.')
+                            td
                                 div.download-template-buttons
                                     a(href="/download-template/danish" style="margin-right: 10px;")
                                         button(type="button") Download Danish Template
